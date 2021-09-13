@@ -13,12 +13,12 @@
   
 ######## Train-, Test-Data ################
 
-
-################ Regime A ################
-
 _primary: &primary
   type: pydiver.io.dataset_io.NumpyDataSet
   layer: primary
+
+
+################ Regime A ################
 
 regime_A_X_train:
   <<: *primary
@@ -54,7 +54,6 @@ regime_B_X_test:
 regime_B_Y_test:
   <<: *primary
   filepath: data/03_primary/regimeB/Y_test.npy
-  
   
   
 ################ Trained models ################

@@ -72,31 +72,3 @@ regime_A_pred:
   dataset: pydiver.io.dataset_io.NumpyDataSet  
   path: data/07_model_output/regimeA
   layer: model_output
-  
-
-regime_A_loss:
-  type: pydiver.io.dataset_io.H5PyDataSet
-  filepath: data/08_validation/regimeA/losses.h5
-  layer: validation
-  
-
-  
-#regime_A_pred:
-#  type: pydiver.extras.dataset_io.H5PyDataSet
-#  filepath: data/07_model_output/regimeA/pred.h5
-#  layer: model_output
-
-#regime_A_models:
-#  type: pydiver.extras.dataset_io.H5PyDataSet
-#  filepath: data/06_models/regimeA/models.h5
-##  dataset: pydiver.extras.model_loader
-##  load_args:
-#    strict: True
-#  layer: model
-
-  
-
-#regimeB_cube:
-#  type: numpy.array
-##  filepath: data/01_raw/regimeB
-#  layer: raw

@@ -25,13 +25,13 @@ def prediction_io(X, models_dataset, kwargs):
     return {kwargs['name']: y_preds}
 
 
-def validation_io(filepath_true, filepath_pred, kwargs):
-    y_true = np.array(h5py.File(filepath_true, 'r')['Y'])
-    y_pred = np.array(h5py.File(filepath_pred, 'r')[kwargs['model']])
+#def validation_io(filepath_true, filepath_pred, kwargs):
+#    y_true = np.array(h5py.File(filepath_true, 'r')['Y'])
+#    y_pred = np.array(h5py.File(filepath_pred, 'r')[kwargs['model']])
     
-    loss = validate(y_true, y_pred, loss=kwargs['loss'], depths=kwargs['depths'])
+#    loss = validate(y_true, y_pred, loss=kwargs['loss'], depths=kwargs['depths'])
     
-    return {kwargs['name']: loss}
+ #   return {kwargs['name']: loss}
 
 
 def create_pipeline(regime="A", **kwargs):
