@@ -1,15 +1,15 @@
 # Here you can define all your data sets by using simple YAML syntax.
 #
 
-regime_A_cubes:
-  type: pydiver.io.dataset_io.H5PyDataSet
-  filepath: data/01_raw/regimeA/cubes.h5
-  layer: raw
+#regime_A_cubes:
+#  type: pydiver.io.dataset_io.H5PyDataSet
+#  filepath: data/01_raw/regimeA/cubes.h5
+#  layer: raw
   
-regime_A_cubes_6_sides:
-  type: pydiver.io.dataset_io.H5PyDataSet
-  filepath: data/02_intermediate/regimeA/cubes_6_sides.h5
-  layer: intermediate
+#regime_A_cubes_6_sides:
+#  type: pydiver.io.dataset_io.H5PyDataSet
+#  filepath: data/02_intermediate/regimeA/cubes_6_sides.h5
+#  layer: intermediate
   
 ######## Train-, Test-Data ################
 
@@ -85,10 +85,10 @@ regime_A_pred:
   layer: model_output
   
 
-regime_A_loss:
-  type: pydiver.io.dataset_io.H5PyDataSet
-  filepath: data/08_validation/regimeA/losses.h5
-  layer: validation
+#regime_A_loss:
+#  type: pydiver.io.dataset_io.H5PyDataSet
+#  filepath: data/08_validation/regimeA/losses.h5
+#  layer: validation
   
 
   
