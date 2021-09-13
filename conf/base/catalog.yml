@@ -111,24 +111,3 @@ regime_A_pred:
 #  type: numpy.array
 ##  filepath: data/01_raw/regimeB
 #  layer: raw
-
-
-regime_B_cubes:
-  type: pydiver.io.dataset_io.H5PyDataSet
-  filepath: data/01_raw/regimeB/cubes.h5
-  layer: raw
-  
-regime_B_cubes_6_sides:
-  type: pydiver.io.dataset_io.H5PyDataSet
-  filepath: data/02_intermediate/regimeB/cubes_6_sides.h5
-  layer: intermediate
-  
-regime_B_train:
-  type: pydiver.io.dataset_io.H5PyDataSet
-  filepath: data/03_primary/regimeB/train.h5
-  layer: primary
-  
-regime_B_test:
-  type: pydiver.io.dataset_io.H5PyDataSet
-  filepath: data/03_primary/regimeB/test.h5
-  layer: primary
