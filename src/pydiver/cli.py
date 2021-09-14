@@ -31,6 +31,8 @@ Intended to be invoked via `kedro`."""
 from itertools import chain
 from pathlib import Path
 from typing import Iterable, Tuple
+import collections.abc
+
 
 import click
 from kedro.framework.cli.utils import (
@@ -75,6 +77,37 @@ to the context initializer. Items must be separated by comma, keys - by colon,
 example: param1:value1,param2:value2. Each parameter is split by the first comma,
 so parameter values are allowed to contain colons, parameter keys are not."""
 
+
+def override_nested_params(params, updated_params):
+    for k, v in updated_params.items():
+        if isinstance(v, collections.abc.Mapping):
+            params[k] = override_nested_params(params.get(k, {}), v)
+        else:
+            params[k] = v
+    return params
+
+def _modified_split_params(ctx, param, value):
+    result = _split_params(ctx, param, value)
+
+    nested_result = {}#result.copy()
+    for key, value in result.items():
+        print(key, value)
+        
+        nested = key.split(".", 1)
+        
+        if len(nested)>1:
+            nested_dict = {nested[1]:value}
+
+            if nested[0] in nested_result:
+                nested_result[nested[0]].update(nested_dict)
+            else:
+                nested_result[nested[0]] = nested_dict
+        else:
+            nested_result[key] = value
+
+    #print("HIERHIERHIERHIERHERIHREIHEIHREIRH", result, nested_result)
+
+    return nested_result
 
 def _get_values_as_tuple(values: Iterable[str]) -> Tuple[str, ...]:
     return tuple(chain.from_iterable(value.split(",") for value in values))
@@ -123,8 +156,15 @@ def cli():
     callback=_config_file_callback,
 )
 @click.option(
-    "--params", type=str, default="", help=PARAMS_ARG_HELP, callback=_split_params
+    "--params", type=str, default="", help=PARAMS_ARG_HELP, callback=_modified_split_params
 )
+
+#@cli.command()
+#@click.option("--param_list", type=str)
+#def multi_run(param_list):
+#    pass
+
+
 def run(
     tag,
     env,
@@ -156,7 +196,15 @@ def run(
     node_names = _get_values_as_tuple(node_names) if node_names else node_names
 
     package_name = str(Path(__file__).resolve().parent.name)
-    with KedroSession.create(package_name, env=env, extra_params=params) as session:
+
+    with KedroSession.create(package_name, env=env, extra_params={}) as session:
+        session_params = session.load_context().params
+
+    updated_params = override_nested_params(session_params, params)
+    print(updated_params)
+    with KedroSession.create(package_name, env=env, extra_params=updated_params) as session:
+        #import IPython ; IPython.embed() ; exit(1)
+
         session.run(
             tags=tag,
             runner=runner_class(is_async=is_async),
