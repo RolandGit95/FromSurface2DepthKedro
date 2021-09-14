@@ -43,8 +43,9 @@ def validation_io(y_true, y_preds_dataset, kwargs):
             y_pred = partition_load_func()  
 
             break
-    losses = validate(y_true, y_pred, depths=kwargs['depths'], loss_function=kwargs['loss'])
 
+    losses = validate(y_true, y_pred, depths=kwargs['depths'], loss_function=kwargs['loss'])
+    #print(losses, kwargs['name'])
     return {kwargs['name']:losses}
     
 #    y_true = np.array(h5py.File(filepath_true, 'r')['Y'])
