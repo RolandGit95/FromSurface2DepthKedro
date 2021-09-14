@@ -84,10 +84,11 @@ regime_A_pred:
   layer: model_output
   
 
-#regime_A_loss:
-#  type: pydiver.io.dataset_io.H5PyDataSet
-#  filepath: data/08_validation/regimeA/losses.h5
-#  layer: validation
+regime_A_loss:
+  type: PartitionedDataSet
+  dataset: pydiver.io.dataset_io.NumpyDataSet  
+  path: data/08_validation/regimeA
+  layer: validation
   
 
   

@@ -1,7 +1,8 @@
+import os 
 from kedro.pipeline import Pipeline, node, pipeline
 import kedro
 import numpy as np
-from .utils import validate, predict
+from .utils import predict, validate
 import h5py
 import torch
 import yaml
@@ -21,7 +22,9 @@ def prediction_io(X, models_dataset, kwargs):
         if partition_id == kwargs['name']:
             print("load model")
             model = partition_load_func()  
-    
+
+            break
+            
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu") if not kwargs["device"]=="cpu" else "cpu"
     y_preds = predict(model, X, depths=kwargs["depths"], device=device)
 
@@ -30,7 +33,20 @@ def prediction_io(X, models_dataset, kwargs):
 
 
 
-#def validation_io(filepath_true, filepath_pred, kwargs):
+def validation_io(y_true, y_preds_dataset, kwargs):
+    for partition_id, partition_load_func in y_preds_dataset.items(): 
+        print(partition_id)
+        names = [partition_id, os.path.splitext(partition_id)[0]]
+        if kwargs['name'] in names:
+            print(f"load predictions of model {kwargs['name']}")
+
+            y_pred = partition_load_func()  
+
+            break
+    losses = validate(y_true, y_pred, depths=kwargs['depths'], loss_function=kwargs['loss'])
+
+    return {kwargs['name']:losses}
+    
 #    y_true = np.array(h5py.File(filepath_true, 'r')['Y'])
 #    y_pred = np.array(h5py.File(filepath_pred, 'r')[kwargs['model']])
     
@@ -49,9 +65,26 @@ def create_pipeline(regime="A", multi_model_eval=None):
                 outputs=f"regime_{regime}_pred",
                 name="prediction_node",
             ),  
+
+            node(
+                func=validation_io,
+                inputs=[f"regime_{regime}_Y_test", f"regime_{regime}_pred", "params:validation"],
+                outputs=f"regime_{regime}_loss",
+                name="validation_node",
+            ),  
+
         ]
     )
 
+    return model_eval_pipe
+
+
+
+
+
+
+
+    """
     if isinstance(multi_model_eval, dict):
         multi_model_eval_pipes = Pipeline([])
         
@@ -85,3 +118,4 @@ def create_pipeline(regime="A", multi_model_eval=None):
         return multi_model_eval_pipes
 
     else: return model_eval_pipe
+    """
