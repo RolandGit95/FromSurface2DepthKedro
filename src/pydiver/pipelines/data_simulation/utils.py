@@ -7,6 +7,7 @@ import yaml
 import argparse
 import pprint
 from scipy import ndimage
+from tqdm import tqdm
 
 # %%
 class BarkleySimluation3D:
@@ -131,7 +132,7 @@ def get_starting_condition_two_spirals(size=[120,120,120], seeds=[0,1]):
     
 def simulate_barkley(a=0.6, b=0.01, epsilon=0.02, alpha=1, 
                      starting_condition="two_spirals", dt=0.01, ds=0.1, D=0.02, size=[120,120,120], 
-                     dSave=16, max_save_length=32, num_sims=16, dataset="regimeA", seed=42):
+                     dSave=16, max_save_length=32, num_sims=16, dataset="regimeA", seed=42, init_phase='random'):
     #print("START!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
  
     seeds = np.random.randint(0,1000000, 2)
@@ -151,10 +152,12 @@ def simulate_barkley(a=0.6, b=0.01, epsilon=0.02, alpha=1,
 
     transform = lambda data: (np.array(data)*255-128).astype(np.int8)
 
-    init_phase = 10 #np.random.randint(3000,3500)
-    
+    if init_phase=='random':
+        init_phase = np.random.randint(3000,3500)
+    elif isinstance(init_phase, int):
+        pass
 
-    for i in range(100000):
+    for i in tqdm(range(max_save_length*dSave+dSave)):
         #import IPython ; IPython.embed() ; exit(1)
         s.explicit_step()
     

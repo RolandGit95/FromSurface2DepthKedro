@@ -4,14 +4,14 @@ from .utils import simulate_barkley, main
 
     
 
-def create_pipeline(regime="A", **kwargs):
+def create_pipeline(**kwargs):
     return Pipeline(
         [
             node(
                 func=main,
-                inputs=f"params:regime{regime}",
-                outputs=f"regime_{regime}_cubes",
-                name="simulation_of_barkley",
+                inputs=f"params:simulation",
+                outputs=f"cubes",
+                name="simulation_node",
             ),     
         ]
     )

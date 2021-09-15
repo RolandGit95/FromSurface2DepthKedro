@@ -56,21 +56,21 @@ def validation_io(y_true, y_preds_dataset, kwargs):
  #   return {kwargs['name']: loss}
 
 
-def create_pipeline(regime="A", multi_model_eval=None):
+def create_pipeline(**kwargs):
 
     model_eval_pipe = Pipeline(
         [
             node(
                 func=prediction_io,
-                inputs=[f"regime_{regime}_X_test", f"regime_{regime}_models", "params:prediction"],
-                outputs=f"regime_{regime}_pred",
+                inputs=[f"X_test", f"models", "params:prediction"],
+                outputs=f"pred",
                 name="prediction_node",
             ),  
 
             node(
                 func=validation_io,
-                inputs=[f"regime_{regime}_Y_test", f"regime_{regime}_pred", "params:validation"],
-                outputs=f"regime_{regime}_loss",
+                inputs=[f"Y_test", f"pred", "params:validation"],
+                outputs=f"loss",
                 name="validation_node",
             ),  
 

@@ -1,24 +1,6 @@
-regimeA:
-  # Barkley parameter ---------------------------
-  a: 0.6
-  b: 0.01
-  epsilon: 0.02
-  alpha: 1
+regime: B
 
-  # Simulation quanities ------------------------
-  starting_condition: two_spirals # two_spirals, chaotic
-  dt: 0.01
-  ds: 0.1
-  D: 0.02 
-  size: [120,120,120] # Cube size
-
-  # Save settings -------------------------------
-  dSave: 16 # Sequence discretization for saving in [*ds]
-  max_save_length: 32 # Sequence length
-  num_sims: 16 # How many independent simulation with one call
-  dataset: regimeA
-  
-regimeB:
+simulation:
   # Barkley parameter ---------------------------
   a: 0.75
   b: 0.06
@@ -32,14 +14,22 @@ regimeB:
   D: 0.02 
   size: [120,120,120] # Cube size
 
+  init_phase: random
+
+  last_state_file: None
+
   # Save settings -------------------------------
   dSave: 16 # Sequence discretization for saving in [*ds]
   max_save_length: 32 # Sequence length
   num_sims: 16 # How many independent simulation with one call
   dataset: regimeB
 
+   
+training:
+  device: cuda
+
 prediction:
-  regime: A
+  regime: B
   model: STLSTM
   batch_size: 8
   device: cuda
@@ -50,8 +40,9 @@ validation:
   name: "STLSTM_t32_d32"
   depths: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
   loss: mae # mae, mse
- 
 
+  
+  
   
   
   

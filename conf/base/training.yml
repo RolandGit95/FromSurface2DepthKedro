@@ -1,0 +1,83 @@
+project: CIFAR10
+name: SimpleCNN
+  
+globals:
+  wandb: True
+  seed: 42
+  max_epochs: 2
+  
+dataset:
+  val_split: 0.1
+  train:
+    type: CIFARDataset
+    root: "@/paths/dataset/CIFAR10"
+    transform:
+      type: Compose
+      transforms:
+        #- {type: Resize, p: 1.0, height: "@/dataset/height", width: "@/dataset/width"}
+        #- {type: HorizontalFlip, p: 0.5}
+        - {type: VerticalFlip, p: 0.5}
+        - {type: ShiftScaleRotate, p: 0.5, shift_limit: 0.1, scale_limit: 0.0,
+            rotate_limit: 10, border_mode: 0, value: 0, mask_value: 0}
+        #- {type: RandomResizedCrop, p: 1.0,
+        #    scale: [0.9, 1.0], height: "@/dataset/height", width: "@/dataset/width"}
+        - {type: Normalize, mean:[0.4914, 0.4822, 0.4465], std:[0.247, 0.243, 0.261]}
+        - {type: ToTensorV2, always_apply: True}
+        
+        
+  val:
+    type: CIFARDataset
+    root: "@/paths/dataset/CIFAR10"
+    transform:
+      type: Compose
+      transforms:
+        - {type: Normalize, mean:[0.4914, 0.4822, 0.4465], std:[0.247, 0.243, 0.261]}
+        - {type: ToTensorV2, always_apply: True} 
+    
+dataloader:
+  train:
+    type: DataLoader
+    dataset: "@/dataset/train"
+    batch_size: 64
+    num_workers: 4
+    pin_memory: True
+    drop_last: True    
+    sampler:
+      type: TrainSampler
+      dataset_length: {type: method_call, obj: "@/dataset/train", method: __len__}
+      val_split: "@/dataset/val_split"
+      
+  val:
+    type: DataLoader
+    dataset: "@/dataset/val"
+    batch_size: 64
+    num_workers: 4
+    pin_memory: True
+    drop_last: True    
+    sampler:
+      type: ValSampler
+      dataset_length: {type: method_call, obj: "@/dataset/val", method: __len__}    
+      val_split: "@/dataset/val_split"
+
+model:
+  type: BasicImageModel
+  base_name: resnet18d
+  pretrained: True
+  in_chans: 3
+  num_classes: 10
+  
+optimizer:
+  type: AdamW
+  params: {type: method_call, obj: "@/model", method: parameters}
+  lr: 3.0e-4
+  weight_decay: 1.0e-6
+  
+scheduler:
+  type: ReduceLROnPlateau
+  optimizer: "@/optimizer"
+  mode: max
+  factor: 0.2
+  patience: 3
+  min_lr: 1.0e-7  
+  
+loss: {type: CrossEntropyLoss}

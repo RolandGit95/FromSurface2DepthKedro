@@ -55,8 +55,8 @@ from pydiver import __version__ as release
 # -- Project information -----------------------------------------------------
 
 project = "pydiver"
-copyright = "2021, QuantumBlack Visual Analytics Limited"
-author = "QuantumBlack"
+copyright = ""
+author = "Roland Stenger"
 
 # The short X.Y version.
 version = re.match(r"^([0-9]+\.[0-9]+).*", release).group(1)
