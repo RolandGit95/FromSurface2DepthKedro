@@ -17,18 +17,11 @@ def register_pipelines() -> Dict[str, Pipeline]:
     #conf_loader = ConfigLoader(conf_paths)
 
     registered_pipelines = {}
-    #try:
-    #    multi_model_eval_kwargs = conf_loader.get('multi_model_heval.yml')
-    #    model_validation_pipeline = mv.create_pipeline(multi_model_eval=multi_model_eval_kwargs)
-        
-    #except kedro.config.config.MissingConfigException:
-    #    print('No multi_model_eval')
-
-    #    model_validation_pipeline = mv.create_pipeline(regime="A")
 
     model_validation_pipeline = mv.create_pipeline(regime="A")
 
     registered_pipelines['mv_A'] = model_validation_pipeline
+    registered_pipelines['mv_B'] = mv.create_pipeline(regime="B")
     registered_pipelines['__default__'] = model_validation_pipeline
 
     

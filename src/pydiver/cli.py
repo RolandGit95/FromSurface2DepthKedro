@@ -201,7 +201,9 @@ def run(
         session_params = session.load_context().params
 
     updated_params = override_nested_params(session_params, params)
-    print(updated_params)
+    
+    #print(updated_params)
+    
     with KedroSession.create(package_name, env=env, extra_params=updated_params) as session:
         #import IPython ; IPython.embed() ; exit(1)
 

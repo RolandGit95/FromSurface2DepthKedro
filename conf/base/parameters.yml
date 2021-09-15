@@ -39,6 +39,8 @@ regimeB:
   dataset: regimeB
   
   
+regime: A
+
 prediction:
   regime: A
   model: STLSTM
