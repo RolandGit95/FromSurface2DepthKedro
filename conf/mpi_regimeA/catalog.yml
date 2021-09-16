@@ -1,0 +1,58 @@
+
+######## Simulation #######################
+
+cubes:
+  type: PartitionedDataSet
+  path: data/01_raw/regimeA
+  dataset: pydiver.io.dataset_io.NumpyDataSet
+  layer: raw
+
+######## Train-, Test-Data ################
+
+_primary: &primary
+  type: pydiver.io.dataset_io.NumpyDataSet
+  layer: primary
+
+X_train:
+  <<: *primary
+  filepath: data/03_primary/regimeA/X_train.npy
+  
+Y_train:
+  <<: *primary
+  filepath: data/03_primary/regimeA/Y_train.npy
+  
+X_test:
+  <<: *primary
+  filepath: data/03_primary/regimeA/X_test.npy
+  
+Y_test:
+  <<: *primary
+  filepath: data/03_primary/regimeA/Y_test.npy
+
+
+################ Trained models ################
+
+models:
+  type: PartitionedDataSet
+  path: data/06_models/regimeA
+  load_args:
+    model: STLSTM
+    device: cuda
+  dataset: pydiver.io.dataset_io.TorchModel
+  layer: models
+
+      
+# model predictions
+
+pred:
+  type: PartitionedDataSet
+  dataset: pydiver.io.dataset_io.NumpyDataSet  
+  path: data/07_model_output/regimeA
+  layer: model_output
+  
+loss:
+  type: PartitionedDataSet
+  dataset: pydiver.io.dataset_io.NumpyDataSet  
+  path: data/08_validation/regimeA
+  layer: validation
+  
