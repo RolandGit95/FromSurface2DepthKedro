@@ -27,6 +27,7 @@ def predict(model, data, depths=[0,1,2], batch_size=8, device="cuda"):
         
         y_preds.append(y_pred)  
         #break
+        #import IPython ; IPython.embed() ; exit(1)
         
     y_preds = np.concatenate(y_preds, 0)
     
@@ -46,6 +47,7 @@ def validate(y_true, y_pred, depths=[0,1,2], loss_function="mae", batch_size=8):
 
     loss_fnc = loss_functions[loss_function]
 
+
     LOSSES = []
     for _y_true, _y_pred in tqdm(zip(true_dataloader, pred_dataloader), total=len(true_dataloader)):
         losses = []
@@ -53,6 +55,7 @@ def validate(y_true, y_pred, depths=[0,1,2], loss_function="mae", batch_size=8):
             #import IPython ; IPython.embed() ; exit(1)
             loss = loss_fnc(_y_true[:,:,depth].cpu().detach().numpy(), _y_pred[:,:,i].cpu().detach().numpy())
             losses.append(loss)
+        #import IPython ; IPython.embed() ; exit(1)
 
         LOSSES.append(np.array(losses))
     LOSSES = np.array(LOSSES)

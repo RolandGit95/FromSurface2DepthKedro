@@ -28,11 +28,52 @@
 
 """Project hooks."""
 from typing import Any, Dict, Iterable, Optional
+import logging
+logger = logging.getLogger(__name__)
+import os
+from pathlib import Path
 
 from kedro.config import ConfigLoader
 from kedro.framework.hooks import hook_impl
+from kedro.pipeline.node import Node
 from kedro.io import DataCatalog
 from kedro.versioning import Journal
+
+
+class NestedParamsHook:
+    @hook_impl
+    def before_node_run(
+        self, catalog: DataCatalog, inputs: Dict[str, Any], run_id: str
+    ) -> None:
+        pass #import IPython ; IPython.embed() ; exit(1)
+
+
+
+class CreateDatasetFoldersHook:
+    @staticmethod
+    @hook_impl
+    def after_catalog_created(catalog, conf_catalog, conf_creds, feed_dict, save_version, load_versions, run_id):
+        entries = catalog.list()
+        for entry in entries:
+            try:
+                dset = getattr(catalog.datasets, entry)
+
+                if hasattr(dset, "_path"):
+                    _make_dirs(dset._path)
+                elif hasattr(dset, "_filepath"):
+                    _make_dirs(os.path.split(dset._filepath)[0])
+                else:
+                    pass
+            except AttributeError:
+                pass
+
+
+def _make_dirs(path_to_make):
+    if not os.path.exists(path_to_make):
+        logger.info(f"Creating missing path {path_to_make}")
+        os.makedirs(path_to_make)
+    # creates a .gitkeep file while we're at it
+    #Path(os.path.join(path_to_make, ".gitkeep")).touch()
 
 
 class ProjectHooks:
@@ -40,6 +81,7 @@ class ProjectHooks:
     def register_config_loader(
         self, conf_paths: Iterable[str], env: str, extra_params: Dict[str, Any],
     ) -> ConfigLoader:
+        #import IPython ; IPython.embed() ; exit(1)
         return ConfigLoader(conf_paths)
 
     @hook_impl
