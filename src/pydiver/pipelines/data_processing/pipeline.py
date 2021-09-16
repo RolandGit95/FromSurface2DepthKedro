@@ -42,21 +42,14 @@ def process_cubes_6_sides_io(filepath):
 #    return split_data(data)
     
 
-def create_pipeline(regime="A", **kwargs):
+def create_pipeline(**kwargs):
     return Pipeline(
         [
             node(
                 func=process_cube_io,
-                inputs=f"regime_{regime}_cubes",
-                outputs=f"regime_{regime}_cubes_6_sides",
+                inputs=f"cubes",
+                outputs=["X", "Y"],
                 name="preprocess_cubes_node",
-            ),
-            
-            node(
-                func=process_cubes_6_sides_io,
-                inputs=f"regime_{regime}_cubes_6_sides",
-                outputs=f"regime_{regime}_train",
-                name="preprocess_cubes_6_sides_node",
-            ),            
+            ),        
         ]
     )

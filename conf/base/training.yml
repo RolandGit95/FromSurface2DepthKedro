@@ -1,44 +1,32 @@
-project: CIFAR10
-name: SimpleCNN
+name: STLSTM
   
 globals:
   wandb: True
   seed: 42
-  max_epochs: 2
+  max_epochs: 8
   
 dataset:
   val_split: 0.1
-  train:
-    type: CIFARDataset
-    root: "@/paths/dataset/CIFAR10"
-    transform:
-      type: Compose
-      transforms:
-        #- {type: Resize, p: 1.0, height: "@/dataset/height", width: "@/dataset/width"}
-        #- {type: HorizontalFlip, p: 0.5}
-        - {type: VerticalFlip, p: 0.5}
-        - {type: ShiftScaleRotate, p: 0.5, shift_limit: 0.1, scale_limit: 0.0,
-            rotate_limit: 10, border_mode: 0, value: 0, mask_value: 0}
-        #- {type: RandomResizedCrop, p: 1.0,
-        #    scale: [0.9, 1.0], height: "@/dataset/height", width: "@/dataset/width"}
-        - {type: Normalize, mean:[0.4914, 0.4822, 0.4465], std:[0.247, 0.243, 0.261]}
-        - {type: ToTensorV2, always_apply: True}
-        
-        
-  val:
-    type: CIFARDataset
-    root: "@/paths/dataset/CIFAR10"
-    transform:
-      type: Compose
-      transforms:
-        - {type: Normalize, mean:[0.4914, 0.4822, 0.4465], std:[0.247, 0.243, 0.261]}
-        - {type: ToTensorV2, always_apply: True} 
-    
+  seed: "@/globals/seed"
+  train: 
+    type: BarkleyDataset
+    X: {type: input_data}
+    Y: {type: true_output_data}
+    depths: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+    time_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+
+  val: 
+    type: BarkleyDataset
+    X: {type: input_data}
+    Y: {type: true_output_data}
+    depths: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+    time_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+  
 dataloader:
   train:
     type: DataLoader
     dataset: "@/dataset/train"
-    batch_size: 64
+    batch_size: 8
     num_workers: 4
     pin_memory: True
     drop_last: True    
@@ -60,11 +48,12 @@ dataloader:
       val_split: "@/dataset/val_split"
 
 model:
-  type: BasicImageModel
-  base_name: resnet18d
-  pretrained: True
-  in_chans: 3
-  num_classes: 10
+  type: STLSTM
+  pretrained: False
+  model_path: None
+  depths: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+  time_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+  hidden_size: 64
   
 optimizer:
   type: AdamW
@@ -80,4 +69,4 @@ scheduler:
   patience: 3
   min_lr: 1.0e-7  
   
-loss: {type: CrossEntropyLoss}
+loss: {type: MeanSquaredError}

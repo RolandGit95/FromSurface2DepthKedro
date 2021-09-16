@@ -6,12 +6,10 @@ from torchvision.datasets import VisionDataset
 
 # %%
 
-class BarkleyDataset(VisionDataset):
+class BarkleyDataset(Dataset):
     # filenames of the input (X) and target data (y)
-    dataX = 'X*.npy'
-    dataY = 'Y*.npy'
     
-    def __init__(self, root: str, train: bool = True, depths=[0,1,2], time_steps=[0,1,2], max_length=-1, dataset_idx=0) -> None:
+    def __init__(self, X, Y, train: bool = True, depths=[0,1,2], time_steps=[0,1,2], max_length=-1, dataset_idx=0) -> None:
         """
         Parameters
         ----------
@@ -42,10 +40,12 @@ class BarkleyDataset(VisionDataset):
         None.
 
         """
-        super(BarkleyDataset, self).__init__(root)
+        super(BarkleyDataset, self).__init__()
         
         self.train = train  # training set or test set
         #self.depth = depth
+
+        self.max_length = max_length
         
         self.depths = np.array(depths)
         max_depth = max(depths)
@@ -56,27 +56,15 @@ class BarkleyDataset(VisionDataset):
         #max_time_steps = max(time_steps)
 
         #self.time_steps = time_steps
-        
-        self.root = root
-        
+                
         # This transformation function will be applied on the data if it is called in __getitem__
         self.transform = lambda data:(data.float()+127)/255.
         self.target_transform = lambda data:(data.float()+127)/255.
-        
-        #if not self._check_exists():
-        #    raise RuntimeError('Dataset not found.')
-            
-        xfiles = glob.glob(os.path.join(self.root, self.dataX))
-        yfiles = glob.glob(os.path.join(self.root, self.dataY))
-        
-        xfiles.sort(), yfiles.sort()
-        #print(xfiles, yfiles)
-        
-        xfile = xfiles[dataset_idx]
-        yfile = yfiles[dataset_idx]
-        
-        self.X = torch.tensor(np.load(xfile)[:max_length])[:,self.time_steps]
-        self.y = torch.tensor(np.load(yfile)[:max_length])[:,:,self.depths]
+
+        print(X)
+    
+        self.X = torch.tensor(X[:self.max_length])[:,self.time_steps]
+        self.y = torch.tensor(Y[:self.max_length])[:,:,self.depths]
 
     def __getitem__(self, idx: int):
         """
@@ -101,16 +89,15 @@ class BarkleyDataset(VisionDataset):
 
     def __len__(self):
         return len(self.X)
+
     
     def __repr__(self) -> str:
         head = "Dataset " + self.__class__.__name__
         body = ["Number of datapoints: {}".format(self.__len__())]
-        if self.root is not None:
-            body.append("Root location: {}".format(self.root))
         body.append("Max. depth: {}".format(max(self.depths)))
         body.append("Number of time-steps: {}".format(self.time_steps))
         body += self.extra_repr().splitlines()
-        lines = [head] + [" " * self._repr_indent + line for line in body]
+        lines = [head]
         return '\n'.join(lines)
 
 
@@ -126,15 +113,6 @@ class BarkleyDataset(VisionDataset):
             The default is True.
         """
         self.train = train
-        
-    @property
-    def folder(self):
-        return self.root
-
-    def _check_exists(self):       
-        #print(os.path.join(self.root, self.dataX))
-        return (os.path.exists(os.path.join(self.folder, self.dataX)) and
-                os.path.exists(os.path.join(self.folder, self.dataY)))
 
     def extra_repr(self):
         return "Split: {}".format("Train" if self.train is True else "Test")       

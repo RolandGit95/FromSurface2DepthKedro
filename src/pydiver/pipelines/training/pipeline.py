@@ -1,18 +1,38 @@
-import os 
+#import os 
 from kedro.pipeline import Pipeline, node, pipeline
-import kedro
-import numpy as np
-import h5py
-import torch
+#import kedro
+#import numpy as np
+#import h5py
+#import torch
 import yaml
-from kedro.config import ConfigLoader
+#from kedro.config import ConfigLoader
 
-from .utils import train
+from .utils import setDataloader
+from pytorch_pfn_extras.config import Config
+from .CONFIG_TYPES import CONFIG_TYPES
+
+#device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+#cfg = Config(cfg, types=CONFIG_TYPES)
 
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+def make(X, Y):
+    CONFIG_TYPES['input_data'] = X
+    CONFIG_TYPES['true_output_data'] = Y
 
+    with open("conf/base/training.yml", 'r') as file:
+        cfg = yaml.safe_load(file)
 
+    cfg = Config(cfg, types=CONFIG_TYPES)
+
+    import IPython ; IPython.embed() ; exit(1)
+
+    #train_dataloader, test_dataloader = setDataloader(X, Y, cfg)
+    return None #train_dataloader, test_dataloader
+
+def train(X, Y):
+    make(X,Y)
+    #import IPython ; IPython.embed() ; exit(1)
 
 def create_pipeline(**kwargs):
 

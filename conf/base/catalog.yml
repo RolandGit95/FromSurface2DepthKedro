@@ -7,7 +7,6 @@ cubes:
   dataset: pydiver.io.dataset_io.NumpyDataSet
   layer: raw
 
-
 ######## Train-, Test-Data ################
 
 _primary: &primary
