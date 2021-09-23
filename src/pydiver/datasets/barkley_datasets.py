@@ -61,10 +61,14 @@ class BarkleyDataset(Dataset):
         self.transform = lambda data:(data.float()+127)/255.
         self.target_transform = lambda data:(data.float()+127)/255.
 
-        print(X)
+        #print(X)
     
         self.X = torch.tensor(X[:self.max_length])[:,self.time_steps]
         self.y = torch.tensor(Y[:self.max_length])[:,:,self.depths]
+
+    #def setData(self, X, Y):
+    #    self.X = torch.tensor(X[:self.max_length])[:,self.time_steps]
+    #    self.y = torch.tensor(Y[:self.max_length])[:,:,self.depths]
 
     def __getitem__(self, idx: int):
         """
@@ -85,10 +89,14 @@ class BarkleyDataset(Dataset):
             X = torch.rot90(X, k=k, dims=[2,3])
             y = torch.rot90(y, k=k, dims=[2,3])
 
-        return X, y
+        return {'X': X, 'y': y}
 
     def __len__(self):
-        return len(self.X)
+        try:
+            l = len(self.X)
+        except:
+            l = 0
+        return l
 
     
     def __repr__(self) -> str:

@@ -35,13 +35,5 @@ def get_val_sampler(dataset_length, val_split=0.1, batch_size=64, shuffle=True, 
     
     return valid_sampler
 
-
-def setDataloader(X, Y, cfg):
-    train_dataloader = cfg['/dataloader']['train']
-    test_dataloader = cfg['/dataloader']['train']
-    train_dataloader.dataset.setData(X,Y)
-    test_dataloader.dataset.setData(X,Y)
-    return train_dataloader, test_dataloader
-
 def train(X_train, Y_train):
     pass#import IPython ; IPython.embed() ; exit(1)

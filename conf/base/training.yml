@@ -1,32 +1,35 @@
-name: STLSTM
+project: PyDiver
+name: STLSTM_t5_d2
   
 globals:
   wandb: True
   seed: 42
-  max_epochs: 8
+  max_epochs: 1
   
 dataset:
+  depths: [0,1] #[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+  time_steps: [0,1,2,3,4,5] #[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
   val_split: 0.1
   seed: "@/globals/seed"
   train: 
     type: BarkleyDataset
     X: {type: input_data}
     Y: {type: true_output_data}
-    depths: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
-    time_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+    depths: "@/dataset/depths" 
+    time_steps: "@/dataset/time_steps"
 
   val: 
     type: BarkleyDataset
     X: {type: input_data}
     Y: {type: true_output_data}
-    depths: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
-    time_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
-  
+    depths: "@/dataset/depths" 
+    time_steps: "@/dataset/time_steps" 
+
 dataloader:
   train:
     type: DataLoader
     dataset: "@/dataset/train"
-    batch_size: 8
+    batch_size: 4
     num_workers: 4
     pin_memory: True
     drop_last: True    
@@ -38,7 +41,7 @@ dataloader:
   val:
     type: DataLoader
     dataset: "@/dataset/val"
-    batch_size: 64
+    batch_size: 4
     num_workers: 4
     pin_memory: True
     drop_last: True    
@@ -49,10 +52,10 @@ dataloader:
 
 model:
   type: STLSTM
-  pretrained: False
-  model_path: None
-  depths: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
-  time_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+  #pretrained: False
+  #model_path: None
+  #depths: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+  #time_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
   hidden_size: 64
   
 optimizer:

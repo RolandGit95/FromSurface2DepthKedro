@@ -17,7 +17,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def prediction_io(X, models_dataset, kwargs):   
-    #print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",kwargs)
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",kwargs)
     for partition_id, partition_load_func in models_dataset.items(): 
         if partition_id == kwargs['name']:
             print("load model")

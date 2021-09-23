@@ -37,4 +37,8 @@ CONFIG_TYPES = {
     "NLLLoss": nn.NLLLoss,
     "CrossEntropyLoss": nn.CrossEntropyLoss,
 
+    "MeanSquaredError": nn.MSELoss,
+    #"MeanAbsoluteError": nn.MAELoss
+
+
 }

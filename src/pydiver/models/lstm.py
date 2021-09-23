@@ -302,9 +302,7 @@ class STLSTM_layers(nn.Module):
 
 class STLSTM(nn.Module):
     def __init__(self, input_size=1, 
-                 encoder_hidden_size=64, 
-                 decoder_hidden_size=64,
-                 lstm_hidden_size=64,
+                 hidden_size=64, 
                  output_size=1, 
                  name='STLSTM'):
         
@@ -315,11 +313,11 @@ class STLSTM(nn.Module):
         if output_size==None:
             output_size = input_size
             
-        self.encoder = TimeDistributed(Encoder(input_size, encoder_hidden_size, output_size=lstm_hidden_size))
-        self.decoder = TimeDistributed(Decoder(lstm_hidden_size, decoder_hidden_size, output_size=output_size))
+        self.encoder = TimeDistributed(Encoder(input_size, hidden_size, output_size=hidden_size))
+        self.decoder = TimeDistributed(Decoder(hidden_size, hidden_size, output_size=output_size))
 
-        self.encoder_stlstm = STLSTM_layers(lstm_hidden_size, lstm_hidden_size, num_layers=3)
-        self.decoder_stlstm = STLSTM_layers(lstm_hidden_size, lstm_hidden_size, num_layers=3)
+        self.encoder_stlstm = STLSTM_layers(hidden_size, hidden_size, num_layers=3)
+        self.decoder_stlstm = STLSTM_layers(hidden_size, hidden_size, num_layers=3)
 
     def forward(self, input, max_depth=10):
         input = self.encoder(input)

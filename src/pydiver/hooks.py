@@ -33,11 +33,42 @@ logger = logging.getLogger(__name__)
 import os
 from pathlib import Path
 
-from kedro.config import ConfigLoader
+from kedro.config import ConfigLoader, TemplatedConfigLoader
 from kedro.framework.hooks import hook_impl
 from kedro.pipeline.node import Node
 from kedro.io import DataCatalog
 from kedro.versioning import Journal
+from copy import deepcopy
+from typing import Any, Dict, Iterable, Optional, Union
+import collections.abc
+
+class CustomTemplatedConfigLoader(TemplatedConfigLoader):
+    def __init__(
+        self,
+        conf_paths: Union[str, Iterable[str]],
+        *,
+        globals_pattern: Optional[str] = None,
+        globals_dict: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(conf_paths, globals_pattern=None, globals_dict=None)
+
+        self._arg_dict = super().get(globals_pattern) if globals_pattern else {}
+
+        globals_dict = deepcopy(globals_dict) or {}
+
+        self._arg_dict = {**self._arg_dict, **globals_dict} #self._override_nested_params(self._arg_dict, **globals_dict)
+        import IPython ; IPython.embed() ; exit(1)
+
+
+    def _override_nested_params(self, params, updated_params):
+        for k, v in updated_params.items():
+            if isinstance(v, collections.abc.Mapping):
+                params[k] = self._override_nested_params(params.get(k, {}), v)
+            else:
+                params[k] = v
+        return params
+
+
 
 
 class NestedParamsHook:
@@ -83,6 +114,15 @@ class ProjectHooks:
     ) -> ConfigLoader:
         #import IPython ; IPython.embed() ; exit(1)
         return ConfigLoader(conf_paths)
+
+        #print('""""""""""""""""""""""""""""""""""""""""""""""!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        
+        #return CustomTemplatedConfigLoader(
+        #    conf_paths,
+        #    globals_dict=extra_params,
+        #)
+
+
 
     @hook_impl
     def register_catalog(
