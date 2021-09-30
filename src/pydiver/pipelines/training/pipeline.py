@@ -2,6 +2,7 @@
 from kedro.pipeline import Pipeline, node, pipeline
 #import kedro
 #import numpy as np
+import re
 #import h5py
 import torch
 import torch.nn as nn
@@ -75,11 +76,26 @@ def config(partition_fnc_X, partition_fnc_Y, params):
 def train(dataset_X, dataset_Y, params):
     global cfg
 
+    files_X, files_Y = list(dataset_X.keys()), list(dataset_Y.keys())
+
+    for name in files_X:
+        m = re.search(r'train_\d+$', name)#.group()
+        if isinstance(m, (type(None))):
+            files_X.remove(name)
+
+    for name in files_Y:
+        m = re.search(r'train_\d+$', name)#.group()
+        if isinstance(m, (type(None))):
+            files_Y.remove(name)
+
+    files_X.sort(), files_Y.sort()
+
+    #import IPython ; IPython.embed() ; exit(1)
     cfg = config(dataset_X['X_train_00'], dataset_Y['Y_train_00'], params)
 
     model = DiverModule()
     datamodule = DataModule()
-    logger = pl_loggers.WandbLogger(name=cfg["/name"], project=cfg["/project"], save_dir="logs/")
+    #logger = pl_loggers.WandbLogger(name=cfg["/name"], project=cfg["/project"], save_dir="logs/")
 
     trainer = pl.Trainer(gpus=1,
                          max_epochs=cfg['/globals']['max_epochs'],
@@ -92,7 +108,7 @@ def train(dataset_X, dataset_Y, params):
                                              filename=cfg["/name"] + '{epoch}', 
                                              verbose=True)
                              ],
-                         logger=logger,     
+                         #logger=logger,     
                          )
     #import IPython ; IPython.embed() ; exit(1)
 

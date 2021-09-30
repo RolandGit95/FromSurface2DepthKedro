@@ -7,29 +7,32 @@ cubes:
   dataset: pydiver.io.dataset_io.NumpyDataSet
   layer: raw
 
-
 ######## Train-, Test-Data ################
 
 _primary: &primary
-  type: pydiver.io.dataset_io.NumpyDataSet
+  type: PartitionedDataSet
+  dataset: pydiver.io.dataset_io.NumpyDataSet
   layer: primary
 
 X_train:
   <<: *primary
-  filepath: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/two_spirals/processed/X.npy
+  path: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/two_spirals/processed/X_train
+  filename_suffix: .npy
   
 Y_train:
   <<: *primary
-  filepath: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/two_spirals/processed/Y.npy
+  path: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/two_spirals/processed/Y_train
+  filename_suffix: .npy
   
 X_test:
   <<: *primary
-  filepath: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/two_spirals/processed/X_test.npy
+  path: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/two_spirals/processed/X_test
+  filename_suffix: .npy
   
 Y_test:
   <<: *primary
-  filepath: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/two_spirals/processed/Y_test.npy
-
+  path: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/two_spirals/processed/Y_test
+  filename_suffix: .npy
 
 ################ Trained models ################
 

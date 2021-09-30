@@ -1,5 +1,5 @@
 project: PyDiver
-name: STLSTM_t_1_6_12_17_22_27_32_d_31
+name: STLSTM_t_1_6_12_17_22_27_32_d_1
   
 globals:
   wandb: True
@@ -7,7 +7,7 @@ globals:
   max_epochs: 1
   
 dataset:
-  depths: [30]
+  depths: [0]
   time_steps: [0,5,11,16,21,26,31]
   val_split: 0.1
   seed: "@/globals/seed"
