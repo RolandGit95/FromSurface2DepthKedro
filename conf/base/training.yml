@@ -4,7 +4,7 @@ name: STLSTM_t_1_6_12_17_22_27_32_d_31
 globals:
   wandb: True
   seed: 42
-  max_epochs: 8
+  max_epochs: 1
   
 dataset:
   depths: [30]

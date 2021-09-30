@@ -41,7 +41,7 @@ class TorchModel(AbstractDataSet):
 
     def _load(self):
         #import IPython ; IPython.embed() ; exit(1)
-        model = nn.DataParallel(STLSTM(1,64))
+        #model = nn.DataParallel(STLSTM(1,64))
         #model.load(torch.load(self._filepath, map_location=self._device), strict=True)
         self._model.load_state_dict(torch.load(self._filepath, map_location=self._device))
 

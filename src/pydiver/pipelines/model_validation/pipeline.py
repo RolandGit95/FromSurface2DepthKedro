@@ -14,11 +14,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def prediction_io(X, models_dataset, kwargs):   
-    #print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",kwargs)
     for partition_id, partition_load_func in models_dataset.items(): 
         if partition_id == kwargs['name']:
             print("load model")
-            #import IPython ; IPython.embed() ; exit(1)
             model = partition_load_func()  
 
             break
@@ -30,7 +28,7 @@ def prediction_io(X, models_dataset, kwargs):
     return {kwargs['name']: y_preds}
 
 
-def validation_io(y_true, y_preds_dataset, kwargs):
+def validation_io(y_true_dataset, y_preds_dataset, kwargs):
     for partition_id, partition_load_func in y_preds_dataset.items(): 
         print(partition_id)
         names = [partition_id, os.path.splitext(partition_id)[0]]
@@ -41,7 +39,7 @@ def validation_io(y_true, y_preds_dataset, kwargs):
 
             break
 
-    losses = validate(y_true, y_pred, depths=kwargs['depths'], loss_function=kwargs['loss'])
+    losses = validate(y_true_dataset['Y_test_00'], y_pred, depths=kwargs['depths'], loss_function=kwargs['loss'])
 
     return {kwargs['name']:losses}
 
