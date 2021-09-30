@@ -4,6 +4,7 @@ from kedro.pipeline import Pipeline, node, pipeline
 #import numpy as np
 #import h5py
 import torch
+import torch.nn as nn
 import yaml
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import LearningRateMonitor, EarlyStopping, ModelCheckpoint
@@ -11,13 +12,13 @@ from pytorch_lightning import loggers as pl_loggers
 
 from pytorch_pfn_extras.config import Config
 from .CONFIG_TYPES import CONFIG_TYPES
-
+from pydiver.models import lstm
 
 class DiverModule(pl.LightningModule): 
     def __init__(self):    
         super(DiverModule, self).__init__()
         
-        self.model = cfg['/model']
+        self.model = nn.DataParallel(cfg['/model'])
         self.loss = cfg['/loss']
         self.val_loss = cfg['/loss']
 
@@ -88,15 +89,17 @@ def train(dataset_X, dataset_Y, params):
                              #EarlyStopping(monitor='val_acc', patience=3, verbose=True, mode='max'),
                              ModelCheckpoint(monitor='val_loss', 
                                              dirpath="data/06_models/regimeB", 
-                                             filename=cfg["/name"] + '{epoch:02d}', 
-                                             auto_insert_metric_name=False)
+                                             filename=cfg["/name"] + '{epoch}', 
+                                             verbose=True)
                              ],
                          logger=logger,     
                          )
+    #import IPython ; IPython.embed() ; exit(1)
 
     trainer.fit(model, datamodule)
-
-    #return {cfg["/name"]:model.model}
+    #import IPython ; IPython.embed() ; exit(1)
+    #return model
+    return {cfg["/name"]:model.model.state_dict()}
 
 
 def create_pipeline(**kwargs):
@@ -106,52 +109,10 @@ def create_pipeline(**kwargs):
             node(
                 func=train,
                 inputs=["X_train", "Y_train", "params:training"],
-                outputs=None,#"models",
+                outputs="models",
                 name="training_node",
             ),  
         ]
     )
 
     return model_eval_pipe
-
-
-
-
-
-
-
-    """
-    if isinstance(multi_model_eval, dict):
-        multi_model_eval_pipes = Pipeline([])
-        
-        for name, depths in zip(multi_model_eval['model_names'], multi_model_eval['all_depths']):
-            d = {'name':name, 'depths':depths, 'device':'cuda'}#, **multi_model_eval}
-
-            def generate_param_node(param_to_return):
-                def generated_data_param():
-                    return param_to_return
-                return generated_data_param
-
-            pipeline_key = f'pipeline_{name}'
-
-            multi_model_eval_pipes += Pipeline([
-                node(
-                    generate_param_node(d), 
-                    inputs=None,
-                    outputs=pipeline_key
-                )
-            ])
-
-            multi_model_eval_pipes += pipeline(
-                model_eval_pipe,
-                inputs={f"regime_{regime}_X_test":f"regime_{regime}_X_test", 
-                        f"regime_{regime}_models":f"regime_{regime}_models"},
-                outputs={f"regime_{regime}_pred"},
-                parameters={"params:prediction":pipeline_key},
-                namespace=pipeline_key,
-            )
-
-        return multi_model_eval_pipes
-
-    else: return model_eval_pipe
-    """

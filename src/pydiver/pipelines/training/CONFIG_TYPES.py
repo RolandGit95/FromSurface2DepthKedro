@@ -4,7 +4,7 @@ import torch.nn as nn
 from pydiver.datasets import barkley_datasets as barkley_datasets
 
 from pydiver.models import lstm as lstm
-from .utils import get_train_sampler, get_val_sampler
+from .utils import get_sampler
 
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
@@ -19,8 +19,7 @@ CONFIG_TYPES = {
     # # Dataset, DataLoader
     "BarkleyDataset": barkley_datasets.BarkleyDataset,
 
-    "TrainSampler": get_train_sampler,
-    "ValSampler": get_val_sampler,
+    "Sampler": get_sampler,
     "DataLoader": torch.utils.data.DataLoader,
 
     "ToTensorV2": ToTensorV2,

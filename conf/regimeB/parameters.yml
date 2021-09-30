@@ -32,15 +32,15 @@ training:
 prediction:
   regime: B
   model: STLSTM
-  batch_size: 8
+  batch_size: 2
   device: cuda
-  name: "STLSTM_t32_d32"
-  depths: [0,1,2]
-  time_steps: [0,1,2,3,4,5]
+  name: "STLSTM_t_1_6_12_17_22_27_32_d_31"
+  depths: [30]
+  time_steps: [0,5,11,16,21,26,31]
 
 validation:
-  name: "STLSTM_t32_d32"
-  depths: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+  name: "STLSTM_t_1_6_12_17_22_27_32_d_31"
+  depths: [30]
   loss: mae # mae, mse
 
   

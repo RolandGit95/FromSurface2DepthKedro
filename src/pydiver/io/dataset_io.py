@@ -9,7 +9,7 @@ import torch.nn as nn
 from pydiver.models.lstm import STLSTM
 
 model_keys = dict(
-    STLSTM=STLSTM(1,64)
+    STLSTM=nn.DataParallel(STLSTM(1,64))
     )
 
 class NumpyDataSet(AbstractDataSet):
@@ -35,19 +35,22 @@ class TorchModel(AbstractDataSet):
         self._filepath = filepath
         
         model_name = load_args['model']
-        self._model = nn.DataParallel(model_keys[model_name])
+        self._model = model_keys[model_name]
         
         self._device = torch.device("cuda" if torch.cuda.is_available() else "cpu") if not load_args["device"]=="cpu" else "cpu"
 
     def _load(self):
-        self._model.load_state_dict(torch.load(self._filepath, map_location=self._device), strict=True)
+        #import IPython ; IPython.embed() ; exit(1)
+        model = nn.DataParallel(STLSTM(1,64))
+        #model.load(torch.load(self._filepath, map_location=self._device), strict=True)
+        self._model.load_state_dict(torch.load(self._filepath, map_location=self._device))
+
         return self._model
 
     def _save(self, model) -> None:
-        import IPython ; IPython.embed() ; exit(1)
-        #np.save(self._filepath, data)
-        print(self._filepath)
-        torch.save(model.state_dict(), self._filepath)
+        #import IPython ; IPython.embed() ; exit(1)
+        torch.save(model, self._filepath)
+        return None
 
     def _describe(self) -> Dict[str, Any]:
         return dict(filepath=self._filepath)

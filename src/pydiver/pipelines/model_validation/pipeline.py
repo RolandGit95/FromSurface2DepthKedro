@@ -5,32 +5,29 @@ import numpy as np
 from .utils import predict, validate
 import h5py
 import torch
+import torch.nn as nn
 import yaml
 from kedro.config import ConfigLoader
 from pydiver.models.lstm import STLSTM
-
-model_keys = dict(
-    STLSTM=STLSTM
-    )
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def prediction_io(X, models_dataset, kwargs):   
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",kwargs)
+    #print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",kwargs)
     for partition_id, partition_load_func in models_dataset.items(): 
         if partition_id == kwargs['name']:
             print("load model")
+            #import IPython ; IPython.embed() ; exit(1)
             model = partition_load_func()  
 
             break
             
+    #import IPython ; IPython.embed() ; exit(1)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu") if not kwargs["device"]=="cpu" else "cpu"
-    y_preds = predict(model, X, depths=kwargs["depths"], device=device)
+    y_preds = predict(model, X['X_test_00'](), depths=kwargs["depths"], device=device)
 
-    #print(y_preds)
     return {kwargs['name']: y_preds}
-
 
 
 def validation_io(y_true, y_preds_dataset, kwargs):
@@ -45,15 +42,8 @@ def validation_io(y_true, y_preds_dataset, kwargs):
             break
 
     losses = validate(y_true, y_pred, depths=kwargs['depths'], loss_function=kwargs['loss'])
-    #print(losses, kwargs['name'])
+
     return {kwargs['name']:losses}
-    
-#    y_true = np.array(h5py.File(filepath_true, 'r')['Y'])
-#    y_pred = np.array(h5py.File(filepath_pred, 'r')[kwargs['model']])
-    
-#    loss = validate(y_true, y_pred, loss=kwargs['loss'], depths=kwargs['depths'])
-    
- #   return {kwargs['name']: loss}
 
 
 def create_pipeline(**kwargs):

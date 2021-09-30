@@ -23,6 +23,7 @@ def register_pipelines() -> Dict[str, Pipeline]:
     #registered_pipelines['ds'] = data_simulation_pipeline
     registered_pipelines['mv'] = model_validation_pipeline
     registered_pipelines['tr'] = training_pipeline
+    registered_pipelines['tr+mv'] = training_pipeline + model_validation_pipeline
 
     registered_pipelines['__default__'] = model_validation_pipeline
 

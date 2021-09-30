@@ -9,7 +9,7 @@ from torch.utils.data.sampler import SubsetRandomSampler
 #from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 
-def get_train_sampler(dataset_length, val_split=0.1, batch_size=64, shuffle=True, seed=42):
+def get_sampler(dataset_length, val_split=0.1, batch_size=64, train=True, shuffle=True, seed=42):
     indices = list(range(dataset_length))
     split = int(np.floor(val_split * dataset_length))
     
@@ -17,23 +17,11 @@ def get_train_sampler(dataset_length, val_split=0.1, batch_size=64, shuffle=True
         np.random.seed(seed)
         np.random.shuffle(indices)
     
-    train_idx = indices[split:]
+    if train:
+        train_idx = indices[split:]
+    else:
+        train_idx = indices[:split]
+
     train_sampler = SubsetRandomSampler(train_idx)
     
     return train_sampler
-
-def get_val_sampler(dataset_length, val_split=0.1, batch_size=64, shuffle=True, seed=42):  
-    indices = list(range(dataset_length))
-    split = int(np.floor(val_split * dataset_length))
-    
-    if shuffle:
-        np.random.seed(seed)
-        np.random.shuffle(indices)
-    
-    valid_idx = indices[:split]
-    valid_sampler = SubsetRandomSampler(valid_idx)
-    
-    return valid_sampler
-
-def train(X_train, Y_train):
-    pass#import IPython ; IPython.embed() ; exit(1)
