@@ -35,12 +35,12 @@ prediction:
   batch_size: 2
   device: cuda
   name: "STLSTM_t_1_6_12_17_22_27_32_d_31"
-  depths: [30]
+  depths: [0]
   time_steps: [0,5,11,16,21,26,31]
 
 validation:
   name: "STLSTM_t_1_6_12_17_22_27_32_d_31"
-  depths: [30]
+  depths: [0]
   loss: mae # mae, mse
 
   
