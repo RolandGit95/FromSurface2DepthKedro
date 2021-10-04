@@ -8,9 +8,9 @@ from tqdm import tqdm
 import torch
 import torch.nn as nn
 import yaml
-import pytorch_lightning as pl
-from pytorch_lightning.callbacks import LearningRateMonitor, EarlyStopping, ModelCheckpoint
-from pytorch_lightning import loggers as pl_loggers
+#import pytorch_lightning as pl
+#from pytorch_lightning.callbacks import LearningRateMonitor, EarlyStopping, ModelCheckpoint
+#from pytorch_lightning import loggers as pl_loggers
 
 from pytorch_pfn_extras.config import Config
 from .CONFIG_TYPES import CONFIG_TYPES
