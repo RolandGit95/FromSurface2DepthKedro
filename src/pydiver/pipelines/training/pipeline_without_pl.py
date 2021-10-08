@@ -1,18 +1,13 @@
 import os 
-#import kedro
-#import numpy as np
+from kedro.pipeline import Pipeline, node
 import re
-#import h5py
 from tqdm import tqdm
 import torch
 import torch.nn as nn
-import yaml
 
 from pydiver.models import lstm
 from pydiver.datasets import barkley_datasets
-
-
-
+from .utils import get_sampler
 
 def train_without_pl(dataset_X, dataset_Y, params):
     global cfg
@@ -32,8 +27,11 @@ def train_without_pl(dataset_X, dataset_Y, params):
             files_Y.remove(name)
     files_X.sort(), files_Y.sort()
 
-    X = dataset_X['X_train_00']
-    y = dataset_X['Y_train_00']
+    X = dataset_X['X_train_00']()
+    y = dataset_Y['Y_train_00']()
+
+    #import IPython ; IPython.embed() ; exit(1)
+
 
     dataset = barkley_datasets.BarkleyDataset(X, y, depths=[31], time_steps=[0,5,11,16,21,26,31])
 
@@ -42,11 +40,17 @@ def train_without_pl(dataset_X, dataset_Y, params):
     val_loss_fnc = nn.MSELoss()
     optimizer = torch.optim.AdamW(model.parameters(), lr=3.0e-4)
 
+
+
     output_length = 1
     for epoch in range(8): 
         print(f'Epoch number {epoch}')
 
-        train_loader, val_loader = cfg['/dataloader']['train'], cfg['/dataloader']['val']
+        train_sampler = get_sampler(len(dataset), val_split=0.1, train=True, shuffle=True, seed=42)
+        val_sampler = get_sampler(len(dataset), val_split=0.1, train=False, shuffle=True, seed=42)
+
+        train_loader = torch.utils.data.DataLoader(dataset, batch_size=8, num_workers=4, shuffle=False, sampler=train_sampler)
+        val_loader = torch.utils.data.DataLoader(dataset, batch_size=8,  num_workers=4, shuffle=False, sampler=val_sampler)
             
         val_loader_iter = iter(val_loader)
         for i, data in tqdm(enumerate(train_loader), total=len(train_loader)):
