@@ -6,8 +6,8 @@ from pydiver.datasets import barkley_datasets as barkley_datasets
 from pydiver.models import lstm as lstm
 from .utils import get_sampler
 
-import albumentations as A
-from albumentations.pytorch import ToTensorV2
+#import albumentations as A
+#from albumentations.pytorch import ToTensorV2
 from torch.optim import lr_scheduler
 #from torch.optim.lr_scheduler import ReduceLROnPlateau
 
@@ -22,7 +22,7 @@ CONFIG_TYPES = {
     "Sampler": get_sampler,
     "DataLoader": torch.utils.data.DataLoader,
 
-    "ToTensorV2": ToTensorV2,
+    #"ToTensorV2": ToTensorV2,
     
     "STLSTM": lstm.STLSTM,
     

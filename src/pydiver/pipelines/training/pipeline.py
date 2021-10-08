@@ -8,9 +8,9 @@ from tqdm import tqdm
 import torch
 import torch.nn as nn
 import yaml
-#import pytorch_lightning as pl
-#from pytorch_lightning.callbacks import LearningRateMonitor, EarlyStopping, ModelCheckpoint
-#from pytorch_lightning import loggers as pl_loggers
+import pytorch_lightning as pl
+from pytorch_lightning.callbacks import LearningRateMonitor, EarlyStopping, ModelCheckpoint
+from pytorch_lightning import loggers as pl_loggers
 
 from pytorch_pfn_extras.config import Config
 from .CONFIG_TYPES import CONFIG_TYPES
@@ -96,7 +96,7 @@ def train(dataset_X, dataset_Y, params):
     model = DiverModule()
     datamodule = DataModule()
     #logger = pl_loggers.WandbLogger(name=cfg["/name"], project=cfg["/project"], save_dir="logs/")
-
+    logger = pl_loggers.TensorBoardLogger("logs/")
     trainer = pl.Trainer(gpus=1,
                          max_epochs=cfg['/globals']['max_epochs'],
                          progress_bar_refresh_rate=1,
@@ -108,7 +108,7 @@ def train(dataset_X, dataset_Y, params):
                                              filename=cfg["/name"] + '{epoch}', 
                                              verbose=True)
                              ],
-                         #logger=logger,     
+                         logger=logger,     
                          )
     #import IPython ; IPython.embed() ; exit(1)
 
@@ -189,7 +189,7 @@ def create_pipeline(**kwargs):
     model_eval_pipe = Pipeline(
         [
             node(
-                func=train_without_pl,
+                func=train,
                 inputs=["X_train", "Y_train", "params:training"],
                 outputs="models",
                 name="training_node",

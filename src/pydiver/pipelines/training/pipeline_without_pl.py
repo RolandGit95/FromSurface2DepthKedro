@@ -1,5 +1,4 @@
 import os 
-from kedro.pipeline import Pipeline, node, pipeline
 #import kedro
 #import numpy as np
 import re
@@ -9,20 +8,8 @@ import torch
 import torch.nn as nn
 import yaml
 
-from pytorch_pfn_extras.config import Config
-from .CONFIG_TYPES import CONFIG_TYPES
 from pydiver.models import lstm
-
-
-
-def config(partition_fnc_X, partition_fnc_Y, params):
-    CONFIG_TYPES['input_data'] = partition_fnc_X
-    CONFIG_TYPES['true_output_data'] = partition_fnc_Y
-
-    with open(params['config_file'], 'r') as file:
-        pre_eval_cfg = yaml.safe_load(file)
-    
-    return Config(pre_eval_cfg, types=CONFIG_TYPES)
+from pydiver.datasets import barkley_datasets
 
 
 
@@ -45,15 +32,18 @@ def train_without_pl(dataset_X, dataset_Y, params):
             files_Y.remove(name)
     files_X.sort(), files_Y.sort()
 
-    cfg = config(dataset_X['X_train_00'], dataset_Y['Y_train_00'], params)
+    X = dataset_X['X_train_00']
+    y = dataset_X['Y_train_00']
 
-    model = nn.DataParallel(cfg['/model'])
-    loss_fnc = cfg['/loss']
-    val_loss_fnc = cfg['/loss']
-    optimizer = cfg['/optimizer']
+    dataset = barkley_datasets.BarkleyDataset(X, y, depths=[31], time_steps=[0,5,11,16,21,26,31])
 
-    output_length = len(cfg['/dataset']['depths'])
-    for epoch in range(cfg['/globals']['max_epochs']): 
+    model = nn.DataParallel(lstm.STLSTM())
+    loss_fnc = nn.MSELoss()
+    val_loss_fnc = nn.MSELoss()
+    optimizer = torch.optim.AdamW(model.parameters(), lr=3.0e-4)
+
+    output_length = 1
+    for epoch in range(8): 
         print(f'Epoch number {epoch}')
 
         train_loader, val_loader = cfg['/dataloader']['train'], cfg['/dataloader']['val']
