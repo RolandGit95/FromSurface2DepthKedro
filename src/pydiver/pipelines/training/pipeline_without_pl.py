@@ -33,24 +33,22 @@ def train_without_pl(dataset_X, dataset_Y, params):
     #import IPython ; IPython.embed() ; exit(1)
 
 
-    dataset = barkley_datasets.BarkleyDataset(X, y, depths=[31], time_steps=[0,5,11,16,21,26,31])
+    dataset = barkley_datasets.BarkleyDataset(X, y, depths=params['depths'], time_steps=params['time_steps'])
 
     model = nn.DataParallel(lstm.STLSTM())
     loss_fnc = nn.MSELoss()
     val_loss_fnc = nn.MSELoss()
-    optimizer = torch.optim.AdamW(model.parameters(), lr=3.0e-4)
-
-
+    optimizer = torch.optim.AdamW(model.parameters(), lr=params['lr'])
 
     output_length = 1
-    for epoch in range(8): 
+    for epoch in range(params['max_epochs']): 
         print(f'Epoch number {epoch}')
 
-        train_sampler = get_sampler(len(dataset), val_split=0.1, train=True, shuffle=True, seed=42)
-        val_sampler = get_sampler(len(dataset), val_split=0.1, train=False, shuffle=True, seed=42)
+        train_sampler = get_sampler(len(dataset), val_split=params['val_split'], train=True, shuffle=True, seed=params['seed'])
+        val_sampler = get_sampler(len(dataset), val_split=params['val_split'], train=False, shuffle=True, seed=params['seed'])
 
-        train_loader = torch.utils.data.DataLoader(dataset, batch_size=8, num_workers=4, shuffle=False, sampler=train_sampler)
-        val_loader = torch.utils.data.DataLoader(dataset, batch_size=8,  num_workers=4, shuffle=False, sampler=val_sampler)
+        train_loader = torch.utils.data.DataLoader(dataset, batch_size=params['batch_size'], num_workers=4, sampler=train_sampler)
+        val_loader = torch.utils.data.DataLoader(dataset, batch_size=params['batch_size'],  num_workers=4, sampler=val_sampler)
             
         val_loader_iter = iter(val_loader)
         for i, data in tqdm(enumerate(train_loader), total=len(train_loader)):
@@ -85,7 +83,7 @@ def train_without_pl(dataset_X, dataset_Y, params):
                     val_outputs = model(X_val, max_depth=output_length)
                     val_loss = val_loss_fnc(y_val, val_outputs)
 
-    return {cfg["/name"]:model.state_dict()}  
+    return {params['name']:model.state_dict()}  
 
 
 def create_pipeline_without_pl(**kwargs):
