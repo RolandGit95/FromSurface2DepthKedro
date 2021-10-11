@@ -1,1 +1,0 @@
-kedro run --env mpi_regimeB --pipeline tr_without_pl+mv
