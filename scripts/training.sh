@@ -1,7 +1,7 @@
 #!/bin/bash
 
                     #$ -N kedro
-                    #$ -cwd ../
+                    #$ -cwd
                     #$ -V
                     #$ -o logs/output.o 
                     #$ -e logs/error.e
