@@ -59,18 +59,6 @@ def validation_io(dataset_y_true, dataset_y_preds, kwargs):
         m = re.search(r'test_[\d]+', name)#.group()
         if isinstance(m, type(None)):
             files_true.remove(name)
-    
-    #files_pred.sort(), files_true.sort()
-
-
-    #for partition_id, partition_load_func in dataset_y_preds.items(): 
-    #    print(partition_id)
-    #    names = [partition_id, os.path.splitext(partition_id)[0]]
-    #    if kwargs['name'] in names:
-    #        print(f"load predictions of model {kwargs['name']}")
-
-    #        y_pred = partition_load_func()  
-    #        break
 
     
     losses_dict = {}
