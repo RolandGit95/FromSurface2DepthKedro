@@ -38,7 +38,7 @@ def train_without_pl(dataset_X, dataset_Y, params):
     model = nn.DataParallel(lstm.STLSTM())
     loss_fnc = nn.MSELoss()
     val_loss_fnc = nn.MSELoss()
-    optimizer = torch.optim.AdamW(model.parameters(), lr=params['lr'])
+    optimizer = torch.optim.Adam(model.parameters(), lr=params['lr'])
 
     output_length = 1
     for epoch in range(params['max_epochs']): 
