@@ -31,7 +31,6 @@ class NumpyDataSet(AbstractDataSet):
 class TorchModel(AbstractDataSet):
     
     def __init__(self, filepath: str, load_args: Dict[str, Any] = dict(model="STLSTM", device="cuda")):
-        
         self._filepath = filepath
         
         model_name = load_args['model']

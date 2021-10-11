@@ -37,7 +37,7 @@ def prediction_io(dataset_X_test, models_dataset, kwargs):
         y_preds = predict(model, dataset_X_test[test_data_file](), depths=kwargs["depths"], device=device)
 
         y_preds_dict[kwargs['name'] + "_" + test_data_file] = y_preds
-    return y_preds_dict #{kwargs['name']: y_preds}
+    return y_preds_dict
 
 
 def validation_io(dataset_y_true, dataset_y_preds, kwargs):
@@ -47,33 +47,37 @@ def validation_io(dataset_y_true, dataset_y_preds, kwargs):
     files_pred = list(dataset_y_preds.keys())
     files_true = list(dataset_y_true.keys())
 
-    for name in files_pred:
-        m = re.search(r'train_\d+$', name)#.group()
-        if isinstance(m, (type(None))):
+    _files_pred = files_pred.copy()
+    _files_true = files_true.copy()
+
+    for name in _files_pred:
+        m = re.search(r'test_[\d]+', name)#.group()
+        if isinstance(m, type(None)):
             files_pred.remove(name)
 
-    for name in files_true:
-        m = re.search(r'test_\d+$', name)#.group()
-        if isinstance(m, (type(None))):
+    for name in _files_true:
+        m = re.search(r'test_[\d]+', name)#.group()
+        if isinstance(m, type(None)):
             files_true.remove(name)
     
-    files_pred.sort(), files_true.sort()
+    #files_pred.sort(), files_true.sort()
 
 
-    for partition_id, partition_load_func in dataset_y_preds.items(): 
-        print(partition_id)
-        names = [partition_id, os.path.splitext(partition_id)[0]]
-        if kwargs['name'] in names:
-            print(f"load predictions of model {kwargs['name']}")
+    #for partition_id, partition_load_func in dataset_y_preds.items(): 
+    #    print(partition_id)
+    #    names = [partition_id, os.path.splitext(partition_id)[0]]
+    #    if kwargs['name'] in names:
+    #        print(f"load predictions of model {kwargs['name']}")
 
-            y_pred = partition_load_func()  
-            break
+    #        y_pred = partition_load_func()  
+    #        break
 
     
     losses_dict = {}
     for preds, trues in zip(files_pred, files_true):
-        #import IPython ; IPython.embed() ; exit(1)
-        losses = validate(dataset_y_true[trues](), dataset_y_preds[preds](), depths=kwargs['depths'], loss_function=kwargs['loss'])
+        if not isinstance(re.search(kwargs['name'], preds), type(None)):
+            #import IPython ; IPython.embed() ; exit(1)
+            losses = validate(dataset_y_true[trues](), dataset_y_preds[preds](), depths=kwargs['depths'], loss_function=kwargs['loss'])
 
         losses_dict[kwargs['name'] + "_" + trues] = losses
     return losses_dict #{kwargs['name']: y_preds}

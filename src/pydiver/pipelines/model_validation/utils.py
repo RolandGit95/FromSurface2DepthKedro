@@ -35,7 +35,7 @@ def predict(model, data, depths=[0,1,2], batch_size=8, device="cuda"):
 
 
 def validate(y_true, y_pred, depths=[0,1,2], loss_function="mae", batch_size=8):
-    import IPython ; IPython.embed() ; exit(1)
+    #import IPython ; IPython.embed() ; exit(1)
     assert loss_function in loss_functions, f"Loss function {loss_function} not implemented"
     assert y_pred.shape[2] == len(depths), "Number of layers to be validated don't match with the prediction-dimensions"
     assert len(y_true) == len(y_pred), "Two dataset don't have the same length"
