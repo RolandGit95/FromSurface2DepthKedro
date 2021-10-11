@@ -25,6 +25,28 @@ simulation:
   dataset: regimeB
 
    
+data_science:
+  device: cuda
+  model: STLSTM
+  depths: [0]
+  time_steps: [0,5,11,16,21,26,31]
+  seed: 42
+  name: "STLSTM_t_1_6_12_17_22_27_32_d_1"
+
+  training:
+    num_datasets: 1
+    config_file: conf/base/training.yml
+    max_epochs: 1
+    lr: 3.0e-4
+    val_split: 0.1
+    batch_size: 8
+
+  prediction:
+    batch_size: 2 # batch_size of predictions till the whole dataset is predicted
+
+  validation:
+    loss: mae # mae, mse
+
 training:
   device: cuda
   num_datasets: 1 # defines the number of dataset with are used for training. Each dataset comes within a file with the name X_train_(xy) and Y_train_(xy).
