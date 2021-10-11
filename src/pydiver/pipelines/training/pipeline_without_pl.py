@@ -35,7 +35,7 @@ def train_without_pl(dataset_X, dataset_Y, params):
 
     dataset = barkley_datasets.BarkleyDataset(X, y, depths=params['depths'], time_steps=params['time_steps'])
 
-    model = nn.DataParallel(lstm.STLSTM())
+    model = nn.DataParallel(lstm.STLSTM()).to(device)
     loss_fnc = nn.MSELoss()
     val_loss_fnc = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=params['lr'])
