@@ -24,22 +24,73 @@ simulation:
   num_sims: 16 # How many independent simulation with one call
   dataset: regimeB
 
-   
+datascience:
+  name: "STLSTM_t_1_6_12_17_22_27_32_d_1"
+  config_file: conf/base/training.yml
+  device: cuda
+  num_datasets: 1 # defines the number of dataset with are used for training. Each dataset comes within a file with the name X_train_(xy) and Y_train_(xy).
+  seed: 42
+
+  max_epochs: 1
+  model: STLSTM
+
+  depths: [0]
+  time_steps: [0,5,11,16,21,26,31]
+
+  lr: 3.0e-4
+  val_split: 0.1
+  batch_size: 8
+
+  prediction:
+    regime: B
+    model: STLSTM
+    batch_size: 2
+    device: cuda
+    name: "STLSTM_t_1_6_12_17_22_27_32_d_1"
+    depths: [0]
+    time_steps: [0,5,11,16,21,26,31]
+    
+
+
+
 training:
   device: cuda
+  num_datasets: 1 # defines the number of dataset with are used for training. Each dataset comes within a file with the name X_train_(xy) and Y_train_(xy).
   config_file: conf/base/training.yml
+  seed: 42
+  max_epochs: 1
+  depths: [0]
+  time_steps: [0,5,11,16,21,26,31]
+  lr: 3.0e-4
+  val_split: 0.1
+  batch_size: 8
+  name: "STLSTM_t_1_6_12_17_22_27_32_d_1"
+
+  prediction:
+    regime: B
+    model: STLSTM
+    batch_size: 2
+    device: cuda
+    name: "STLSTM_t_1_6_12_17_22_27_32_d_1"
+    depths: [0]
+    time_steps: [0,5,11,16,21,26,31]
+
+  validation:
+    name: "STLSTM_t_1_6_12_17_22_27_32_d_1"
+    depths: [0]
+    loss: mae # mae, mse
 
 prediction:
   regime: B
   model: STLSTM
   batch_size: 2
   device: cuda
-  name: "STLSTM_t_1_6_12_17_22_27_32_d_31"
+  name: "STLSTM_t_1_6_12_17_22_27_32_d_1"
   depths: [0]
   time_steps: [0,5,11,16,21,26,31]
 
 validation:
-  name: "STLSTM_t_1_6_12_17_22_27_32_d_31"
+  name: "STLSTM_t_1_6_12_17_22_27_32_d_1"
   depths: [0]
   loss: mae # mae, mse
 

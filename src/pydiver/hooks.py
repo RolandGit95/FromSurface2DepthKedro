@@ -42,43 +42,6 @@ from copy import deepcopy
 from typing import Any, Dict, Iterable, Optional, Union
 import collections.abc
 
-class CustomTemplatedConfigLoader(TemplatedConfigLoader):
-    def __init__(
-        self,
-        conf_paths: Union[str, Iterable[str]],
-        *,
-        globals_pattern: Optional[str] = None,
-        globals_dict: Optional[Dict[str, Any]] = None
-    ):
-        super().__init__(conf_paths, globals_pattern=None, globals_dict=None)
-
-        self._arg_dict = super().get(globals_pattern) if globals_pattern else {}
-
-        globals_dict = deepcopy(globals_dict) or {}
-
-        self._arg_dict = {**self._arg_dict, **globals_dict} #self._override_nested_params(self._arg_dict, **globals_dict)
-        import IPython ; IPython.embed() ; exit(1)
-
-
-    def _override_nested_params(self, params, updated_params):
-        for k, v in updated_params.items():
-            if isinstance(v, collections.abc.Mapping):
-                params[k] = self._override_nested_params(params.get(k, {}), v)
-            else:
-                params[k] = v
-        return params
-
-
-
-
-class NestedParamsHook:
-    @hook_impl
-    def before_node_run(
-        self, catalog: DataCatalog, inputs: Dict[str, Any], run_id: str
-    ) -> None:
-        pass #import IPython ; IPython.embed() ; exit(1)
-
-
 
 class CreateDatasetFoldersHook:
     @staticmethod
@@ -103,8 +66,6 @@ def _make_dirs(path_to_make):
     if not os.path.exists(path_to_make):
         logger.info(f"Creating missing path {path_to_make}")
         os.makedirs(path_to_make)
-    # creates a .gitkeep file while we're at it
-    #Path(os.path.join(path_to_make, ".gitkeep")).touch()
 
 
 class ProjectHooks:
@@ -112,16 +73,7 @@ class ProjectHooks:
     def register_config_loader(
         self, conf_paths: Iterable[str], env: str, extra_params: Dict[str, Any],
     ) -> ConfigLoader:
-        #import IPython ; IPython.embed() ; exit(1)
         return ConfigLoader(conf_paths)
-
-        #print('""""""""""""""""""""""""""""""""""""""""""""""!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        
-        #return CustomTemplatedConfigLoader(
-        #    conf_paths,
-        #    globals_dict=extra_params,
-        #)
-
 
 
     @hook_impl

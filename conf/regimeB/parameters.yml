@@ -30,7 +30,7 @@ training:
   num_datasets: 1 # defines the number of dataset with are used for training. Each dataset comes within a file with the name X_train_(xy) and Y_train_(xy).
   config_file: conf/base/training.yml
   seed: 42
-  max_epochs: 16
+  max_epochs: 1
   depths: [0]
   time_steps: [0,5,11,16,21,26,31]
   lr: 3.0e-4
