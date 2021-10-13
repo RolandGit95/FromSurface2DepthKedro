@@ -44,6 +44,10 @@ def validation_io(dataset_y_true, dataset_y_preds, kwargs):
     #dataset_y_true: y_test_xx
     #dataset_y_pred: [model_name]_X_test_[xx].npy
 
+    if isinstance(kwargs['depths'], str):
+        depths = kwargs['depths']
+        kwargs['depths'] = [int(i) for i in re.findall(r'\d+',depths)]
+        
     files_pred = list(dataset_y_preds.keys())
     files_true = list(dataset_y_true.keys())
 
