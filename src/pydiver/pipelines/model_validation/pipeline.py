@@ -34,7 +34,7 @@ def prediction_io(dataset_X_test, models_dataset, kwargs):
 
     y_preds_dict = {}
     for test_data_file in files_X:
-        y_preds = predict(model, dataset_X_test[test_data_file](), depths=kwargs["depths"], device=device)
+        y_preds = predict(model, dataset_X_test[test_data_file](), depths=kwargs["depths"], device=device, batch_size=kwargs['prediction']['batch_size'])
 
         y_preds_dict[kwargs['name'] + "_" + test_data_file] = y_preds
     return y_preds_dict
@@ -62,12 +62,20 @@ def validation_io(dataset_y_true, dataset_y_preds, kwargs):
 
     
     losses_dict = {}
-    for preds, trues in zip(files_pred, files_true):
-        if not isinstance(re.search(kwargs['name'], preds), type(None)):
+    #import IPython ; IPython.embed() ; exit(1)
+    for preds in files_pred:
+        print(preds, kwargs['name'])
+        
+        if preds.startswith(kwargs['name'] + '_'):
+        #if not isinstance(re.search(kwargs['name'], preds), type(None)):
             #import IPython ; IPython.embed() ; exit(1)
-            losses = validate(dataset_y_true[trues](), dataset_y_preds[preds](), depths=kwargs['depths'], loss_function=kwargs['loss'])
+            losses = validate(dataset_y_true[files_true[0]](), 
+                              dataset_y_preds[preds](), 
+                              depths=kwargs['depths'], 
+                              loss_function=kwargs['validation']['loss'], 
+                              batch_size=kwargs['prediction']['batch_size'])
 
-        losses_dict[kwargs['name'] + "_" + trues] = losses
+    losses_dict[kwargs['name'] + "_" + files_true[0]] = losses
     return losses_dict #{kwargs['name']: y_preds}
 
     #losses = validate(dataset_y_true['Y_test_00'], y_pred, depths=kwargs['depths'], loss_function=kwargs['loss'])
@@ -80,14 +88,14 @@ def create_pipeline(**kwargs):
         [
             node(
                 func=prediction_io,
-                inputs=[f"X_test", f"models", "params:prediction"],
+                inputs=[f"X_test", f"models", "params:data_science"],
                 outputs=f"pred",
                 name="prediction_node",
             ),  
 
             node(
                 func=validation_io,
-                inputs=[f"Y_test", f"pred", "params:validation"],
+                inputs=[f"Y_test", f"pred", "params:data_science"],
                 outputs=f"loss",
                 name="validation_node",
             ),  

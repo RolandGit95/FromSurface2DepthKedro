@@ -38,17 +38,17 @@ def train_without_pl(dataset_X, dataset_Y, params):
     model = nn.DataParallel(lstm.STLSTM()).to(device)
     loss_fnc = nn.MSELoss()
     val_loss_fnc = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=params['lr'])
+    optimizer = torch.optim.Adam(model.parameters(), lr=params['training']['lr'])
 
     output_length = 1
-    for epoch in range(params['max_epochs']): 
+    for epoch in range(params['training']['max_epochs']): 
         print(f'Epoch number {epoch}')
 
-        train_sampler = get_sampler(len(dataset), val_split=params['val_split'], train=True, shuffle=True, seed=params['seed'])
-        val_sampler = get_sampler(len(dataset), val_split=params['val_split'], train=False, shuffle=True, seed=params['seed'])
+        train_sampler = get_sampler(len(dataset), val_split=params['training']['val_split'], train=True, shuffle=True, seed=params['seed'])
+        val_sampler = get_sampler(len(dataset), val_split=params['training']['val_split'], train=False, shuffle=True, seed=params['seed'])
 
-        train_loader = torch.utils.data.DataLoader(dataset, batch_size=params['batch_size'], num_workers=4, sampler=train_sampler)
-        val_loader = torch.utils.data.DataLoader(dataset, batch_size=params['batch_size'],  num_workers=4, sampler=val_sampler)
+        train_loader = torch.utils.data.DataLoader(dataset, batch_size=params['training']['batch_size'], num_workers=4, sampler=train_sampler)
+        val_loader = torch.utils.data.DataLoader(dataset, batch_size=params['training']['batch_size'],  num_workers=4, sampler=val_sampler)
             
         val_loader_iter = iter(val_loader)
         for i, data in tqdm(enumerate(train_loader), total=len(train_loader)):
@@ -92,7 +92,7 @@ def create_pipeline_without_pl(**kwargs):
         [
             node(
                 func=train_without_pl,
-                inputs=["X_train", "Y_train", "params:training"],
+                inputs=["X_train", "Y_train", "params:data_science"],
                 outputs="models",
                 name="training_node",
             ),  
