@@ -65,6 +65,7 @@ class DataModule(pl.LightningDataModule):
 
 
 def config(partition_fnc_X, partition_fnc_Y, params):
+    import IPython ; IPython.embed() ; exit(1)
     CONFIG_TYPES['input_data'] = partition_fnc_X
     CONFIG_TYPES['true_output_data'] = partition_fnc_Y
 
@@ -125,7 +126,7 @@ def create_pipeline(**kwargs):
         [
             node(
                 func=train,
-                inputs=["X_train", "Y_train", "params:training"],
+                inputs=["X_train", "Y_train", "params:data_science"],
                 outputs="models",
                 name="training_node",
             ),  
