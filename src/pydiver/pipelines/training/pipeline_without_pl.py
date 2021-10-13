@@ -12,6 +12,10 @@ from .utils import get_sampler
 def train_without_pl(dataset_X, dataset_Y, params):
     global cfg
 
+    if isinstance(params['depths'], str):
+        depths = params['depths']
+        params['depths'] = [int(i) for i in re.findall(r'\d+',depths)]
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     files_X, files_Y = list(dataset_X.keys()), list(dataset_Y.keys())
