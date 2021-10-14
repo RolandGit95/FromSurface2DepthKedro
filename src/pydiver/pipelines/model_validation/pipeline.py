@@ -15,6 +15,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def prediction_io(dataset_X_test, models_dataset, kwargs):   
+
+    if isinstance(kwargs['depths'], str):
+        depths = kwargs['depths']
+        kwargs['depths'] = [int(i) for i in re.findall(r'\d+',depths)]
+
     for partition_id, partition_load_func in models_dataset.items(): 
         if partition_id == kwargs['name']:
             print("load model")
@@ -73,19 +78,19 @@ def validation_io(dataset_y_true, dataset_y_preds, kwargs):
         if preds.startswith(kwargs['name'] + '_'):
         #if not isinstance(re.search(kwargs['name'], preds), type(None)):
             #import IPython ; IPython.embed() ; exit(1)
-            losses = validate(dataset_y_true[files_true[0]](), 
+            losses = validate(dataset_y_true[files_true[0]]()[:,:,kwargs['depths'],:,:], 
                               dataset_y_preds[preds](), 
                               depths=kwargs['depths'], 
                               loss_function=kwargs['validation']['loss'], 
                               batch_size=kwargs['prediction']['batch_size'])
 
     losses_dict[kwargs['name'] + "_" + files_true[0]] = losses
+
     return losses_dict #{kwargs['name']: y_preds}
 
     #losses = validate(dataset_y_true['Y_test_00'], y_pred, depths=kwargs['depths'], loss_function=kwargs['loss'])
 
     #return {kwargs['name']:losses}
-
 
 def create_pipeline(**kwargs):
     model_eval_pipe = Pipeline(
@@ -107,45 +112,3 @@ def create_pipeline(**kwargs):
         ]
     )
     return model_eval_pipe
-
-
-
-
-
-
-
-    """
-    if isinstance(multi_model_eval, dict):
-        multi_model_eval_pipes = Pipeline([])
-        
-        for name, depths in zip(multi_model_eval['model_names'], multi_model_eval['all_depths']):
-            d = {'name':name, 'depths':depths, 'device':'cuda'}#, **multi_model_eval}
-
-            def generate_param_node(param_to_return):
-                def generated_data_param():
-                    return param_to_return
-                return generated_data_param
-
-            pipeline_key = f'pipeline_{name}'
-
-            multi_model_eval_pipes += Pipeline([
-                node(
-                    generate_param_node(d), 
-                    inputs=None,
-                    outputs=pipeline_key
-                )
-            ])
-
-            multi_model_eval_pipes += pipeline(
-                model_eval_pipe,
-                inputs={f"regime_{regime}_X_test":f"regime_{regime}_X_test", 
-                        f"regime_{regime}_models":f"regime_{regime}_models"},
-                outputs={f"regime_{regime}_pred"},
-                parameters={"params:prediction":pipeline_key},
-                namespace=pipeline_key,
-            )
-
-        return multi_model_eval_pipes
-
-    else: return model_eval_pipe
-    """
