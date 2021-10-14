@@ -48,16 +48,12 @@ def validate(y_true, y_pred, depths=[0,1,2], loss_function="mae", batch_size=8):
 
     loss_fnc = loss_functions[loss_function]
 
-    #import IPython ; IPython.embed() ; exit(1)
-
     LOSSES = []
     for _y_true, _y_pred in tqdm(zip(true_dataloader, pred_dataloader), total=len(true_dataloader)):
         losses = []
         for i, depth in enumerate(depths):
-            #import IPython ; IPython.embed() ; exit(1)
             loss = loss_fnc(_y_true[:,:,i].cpu().detach().numpy(), _y_pred[:,:,i].cpu().detach().numpy())
             losses.append(loss)
-        #import IPython ; IPython.embed() ; exit(1)
 
         LOSSES.append(np.array(losses))
     LOSSES = np.array(LOSSES)
