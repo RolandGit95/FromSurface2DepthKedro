@@ -17,4 +17,4 @@
 
 import os
 
-os.system("kedro run --env mpi_kedro run --env mpi_regimeB --pipeline tr_without_pl+mv --params data_science.name:STLSTM_t_1_6_12_17_22_27_32_d_1,data_science.depths:[1]")
+os.system("kedro run --env mpi_regimeB --pipeline tr_without_pl+mv --params data_science.name:STLSTM_t_1_6_12_17_22_27_32_d_1,data_science.depths:[1]")
