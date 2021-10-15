@@ -68,7 +68,6 @@ def validation_io(dataset_y_true, dataset_y_preds, kwargs):
         m = re.search(r'test_[\d]+', name)#.group()
         if isinstance(m, type(None)):
             files_true.remove(name)
-
     
     losses_dict = {}
     #import IPython ; IPython.embed() ; exit(1)
