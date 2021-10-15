@@ -26,8 +26,6 @@ def predict(model, data, depths=[0,1,2], batch_size=8, device="cuda"):
         y_pred = model(X, max_depth=num_layers).cpu().detach().numpy()
         
         y_preds.append(y_pred)  
-        #break
-        #import IPython ; IPython.embed() ; exit(1)
         
     y_preds = np.concatenate(y_preds, 0)
     
