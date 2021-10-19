@@ -65,7 +65,7 @@ class DataModule(pl.LightningDataModule):
 
 
 def config(partition_fnc_X, partition_fnc_Y, params):
-    import IPython ; IPython.embed() ; exit(1)
+    #import IPython ; IPython.embed() ; exit(1)
     CONFIG_TYPES['input_data'] = partition_fnc_X
     CONFIG_TYPES['true_output_data'] = partition_fnc_Y
 
@@ -96,8 +96,8 @@ def train(dataset_X, dataset_Y, params):
 
     model = DiverModule()
     datamodule = DataModule()
-    #logger = pl_loggers.WandbLogger(name=cfg["/name"], project=cfg["/project"], save_dir="logs/")
-    logger = pl_loggers.TensorBoardLogger("logs/")
+    logger = pl_loggers.WandbLogger(name=cfg["/name"], project=cfg["/project"], save_dir="logs/")
+    #logger = pl_loggers.TensorBoardLogger("logs/")
     trainer = pl.Trainer(gpus=1,
                          max_epochs=cfg['/globals']['max_epochs'],
                          progress_bar_refresh_rate=1,
