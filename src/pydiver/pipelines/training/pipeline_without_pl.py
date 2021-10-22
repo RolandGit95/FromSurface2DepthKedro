@@ -12,8 +12,20 @@ from pydiver.models import lstm
 from pydiver.datasets import barkley_datasets
 from .utils import get_sampler
 
+#wandb.login()
+
+os.environ["WANDB_MODE"] = "dryrun"
+
+
 def train_without_pl(dataset_X, dataset_Y, params):
     global cfg
+
+
+    wandb.init(project=params['project_name'], 
+                name=params['name'], dir='/logs', 
+                config=params, 
+                reinit=True)
+
 
     if isinstance(params['depths'], str):
         depths = params['depths']
@@ -96,6 +108,8 @@ def train_without_pl(dataset_X, dataset_Y, params):
                 
                 for callback in callback:
                     callback.step(val_loss)
+
+                wandb.log({"loss": loss, "val_loss":val_loss})
 
     return {params['name']:model.state_dict()}  
 
