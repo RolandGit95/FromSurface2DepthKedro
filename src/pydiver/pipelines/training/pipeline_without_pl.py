@@ -106,7 +106,7 @@ def train_without_pl(dataset_X, dataset_Y, params):
                     val_outputs = model(X_val, max_depth=output_length)
                     val_loss = val_loss_fnc(y_val, val_outputs)
                 
-                for callback in callback:
+                for callback in callbacks:
                     callback.step(val_loss)
 
                 wandb.log({"loss": loss, "val_loss":val_loss})
