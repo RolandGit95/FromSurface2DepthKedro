@@ -21,7 +21,7 @@ def train_without_pl(dataset_X, dataset_Y, params):
     global cfg
 
 
-    wandb.init(project=params['project_name'], 
+    wandb.init(project='FromSurface2DepthKedro', 
                 name=params['name'], dir='/logs', 
                 config=params, 
                 reinit=True)
