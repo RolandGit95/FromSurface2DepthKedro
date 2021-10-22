@@ -4,6 +4,9 @@ import re
 from tqdm import tqdm
 import torch
 import torch.nn as nn
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+
+import wandb
 
 from pydiver.models import lstm
 from pydiver.datasets import barkley_datasets
@@ -36,13 +39,17 @@ def train_without_pl(dataset_X, dataset_Y, params):
 
     #import IPython ; IPython.embed() ; exit(1)
 
-
     dataset = barkley_datasets.BarkleyDataset(X, y, depths=params['depths'], time_steps=params['time_steps'])
 
     model = nn.DataParallel(lstm.STLSTM()).to(device)
     loss_fnc = nn.MSELoss()
     val_loss_fnc = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=params['training']['lr'])
+
+    callbacks = [ReduceLROnPlateau(optimizer, patience=512//10, factor=0.3, min_lr=1e-7, verbose=True)]
+
+    wandb.watch(model, log="all", log_freq=32)
+
 
     output_length = 1
     for epoch in range(params['training']['max_epochs']): 
@@ -86,6 +93,9 @@ def train_without_pl(dataset_X, dataset_Y, params):
                 with torch.no_grad():
                     val_outputs = model(X_val, max_depth=output_length)
                     val_loss = val_loss_fnc(y_val, val_outputs)
+                
+                for callback in callback:
+                    callback.step(val_loss)
 
     return {params['name']:model.state_dict()}  
 

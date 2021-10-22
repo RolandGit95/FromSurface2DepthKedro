@@ -53,6 +53,28 @@ class TorchModel(AbstractDataSet):
 
     def _describe(self) -> Dict[str, Any]:
         return dict(filepath=self._filepath)
+
+class OnnxModel(AbstractDataSet):
+    
+    def __init__(self, filepath: str, load_args: Dict[str, Any] = dict(model="STLSTM", device="cuda")):
+        self._filepath = filepath
+        
+        model_name = load_args['model']
+        self._model = model_keys[model_name]
+        
+        self._device = torch.device("cuda" if torch.cuda.is_available() else "cpu") if not load_args["device"]=="cpu" else "cpu"
+
+    def _load(self):
+        self._model.load_state_dict(torch.load(self._filepath, map_location=self._device))
+        return self._model
+
+    def _save(self, model) -> None:
+        torch.save(model, self._filepath)
+        return None
+
+    def _describe(self) -> Dict[str, Any]:
+        return dict(filepath=self._filepath)
+
     
     
     
