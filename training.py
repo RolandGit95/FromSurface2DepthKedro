@@ -38,9 +38,13 @@ def main(argv):
     print(os.environ['SGE_TASK_ID'])
     SGE_TASK_ID = int(os.environ['SGE_TASK_ID']) - 1
 
-    name = f'STLSTM_t_0_2_4_6_8_10_12_14_16_18_20_22_24_26_28_30_31_d_{SGE_TASK_ID}'
+    #name = f'STLSTM_t_0_2_4_6_8_10_12_14_16_18_20_22_24_26_28_30_31_d_{SGE_TASK_ID}'
+    name = f'STLSTM_t32_d_{SGE_TASK_ID}'
+
     depths = str([SGE_TASK_ID])
-    time_steps = '[0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,31]'
+    #time_steps = '[0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,31]'
+    time_steps = '[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]'
+
     time_steps = time_steps.replace(',','_')
 
     ds = 'data_science'
