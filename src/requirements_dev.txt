@@ -1,0 +1,26 @@
+black==21.5b1
+flake8>=3.7.9, <4.0
+ipython==7.10
+isort~=5.0
+jupyter~=1.0
+jupyter_client>=5.1, <7.0
+jupyterlab~=3.0
+kedro==0.17.4
+kedro-telemetry~=0.1.0
+nbstripout~=0.4
+pytest-cov~=2.5
+pytest-mock>=1.7.1, <2.0
+pytest~=6.2
+wheel>=0.35, <0.37
+
+torch==1.8.1+cu101
+scipy==1.6.2
+matplotlib==3.4.2
+h5py==2.10.0
+numpy==1.20.3
+tqdm==4.62.1
+click==7.1.2
+ipython>7
+PyYAML==5.4.1
+recommonmark==0.7.1
+scikit_learn==0.24.2

@@ -31,6 +31,10 @@ def train_without_pl(dataset_X, dataset_Y, params):
         depths = params['depths']
         params['depths'] = [int(i) for i in re.findall(r'\d+',depths)]
 
+    if isinstance(params['time_steps'], str):
+        time_steps = params['time_steps']
+        params['time_steps'] = [int(i) for i in re.findall(r'\d+',time_steps)]
+        
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     files_X, files_Y = list(dataset_X.keys()), list(dataset_Y.keys())
