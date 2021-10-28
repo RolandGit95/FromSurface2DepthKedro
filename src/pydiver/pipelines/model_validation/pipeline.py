@@ -70,6 +70,7 @@ def validation_io(dataset_y_true, dataset_y_preds, kwargs):
             files_true.remove(name)
     
     losses_dict = {}
+    losses = None
     #import IPython ; IPython.embed() ; exit(1)
     for preds in files_pred:
         print(preds, kwargs['name'])
@@ -83,6 +84,7 @@ def validation_io(dataset_y_true, dataset_y_preds, kwargs):
                               loss_function=kwargs['validation']['loss'], 
                               batch_size=kwargs['prediction']['batch_size'])
 
+    assert not isinstance(losses,type(None)), 'loss doesnt exist, check model- or dataset-name'
     losses_dict[kwargs['name'] + "_" + files_true[0]] = losses
 
     return losses_dict #{kwargs['name']: y_preds}

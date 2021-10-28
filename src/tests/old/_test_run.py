@@ -42,11 +42,11 @@ import pytest
 from kedro.framework.context import KedroContext
 
 
-@pytest.fixture
-def project_context():
-    return KedroContext(
-        package_name="pydiver", project_path=Path.cwd()
-    )
+#@pytest.fixture
+#def project_context():
+#    return KedroContext(
+#        package_name="pydiver", project_path=Path.cwd()
+#    )
 
 
 # The tests below are here for the demonstration purpose
