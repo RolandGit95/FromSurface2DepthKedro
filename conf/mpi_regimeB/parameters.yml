@@ -38,7 +38,7 @@ data_science:
   training:
     num_datasets: 1
     config_file: conf/base/training.yml
-    max_epochs: 16
+    max_epochs: 8
     lr: 1.0e-4
     val_split: 0.1
     batch_size: 8
