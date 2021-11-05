@@ -20,12 +20,10 @@ os.environ["WANDB_MODE"] = "dryrun"
 def train_without_pl(dataset_X, dataset_Y, params):
     global cfg
 
-
     wandb.init(project='FromSurface2DepthKedro', 
                 name=params['name'], 
                 config=params, 
                 reinit=True)
-
 
     if isinstance(params['depths'], str):
         depths = params['depths']
@@ -57,13 +55,14 @@ def train_without_pl(dataset_X, dataset_Y, params):
 
     dataset = barkley_datasets.BarkleyDataset(X, y, depths=params['depths'], time_steps=params['time_steps'])
 
-    model = nn.DataParallel(lstm.STLSTM()).to(device)
+    model = nn.DataParallel(lstm.STLSTM(1, params['hidden_size'], 1)).to(device)
     loss_fnc = nn.MSELoss()
     val_loss_fnc = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=params['training']['lr'])
 
     callbacks = [ReduceLROnPlateau(optimizer, patience=512//10, factor=0.3, min_lr=1e-7, verbose=True)]
 
+    #import IPython ; IPython.embed() ; exit(1)
     wandb.watch(model, log="all", log_freq=32)
 
 
@@ -78,6 +77,7 @@ def train_without_pl(dataset_X, dataset_Y, params):
         val_loader = torch.utils.data.DataLoader(dataset, batch_size=params['training']['batch_size'],  num_workers=4, sampler=val_sampler)
             
         val_loader_iter = iter(val_loader)
+
         for i, data in tqdm(enumerate(train_loader), total=len(train_loader)):
             model.zero_grad()
             optimizer.zero_grad()

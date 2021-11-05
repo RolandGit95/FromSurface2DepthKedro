@@ -28,6 +28,8 @@ def predict(model, data, depths=[0,1,2], batch_size=8, device="cuda"):
         y_preds.append(y_pred)  
         
     y_preds = np.concatenate(y_preds, 0)
+
+    #import IPython ; IPython.embed() ; exit(1)
     
     return y_preds
 
