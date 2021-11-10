@@ -41,7 +41,7 @@ def main():
 
     name = f'STLSTM_t{SGE_TASK_ID}_d32'
     time_steps = getTimeStepsFromInt(SGE_TASK_ID)
-    os.system(f"kedro run --env mpi_regimeB --pipeline tr_without_pl+mv --params data_science.name:{name},data_science.time_steps:{time_steps}")
+    os.system(f"kedro run --env exp2_mpi --pipeline tr_without_pl+mv --params data_science.name:{name},data_science.time_steps:{time_steps}")
 
 if __name__=='__main__':
     main()
