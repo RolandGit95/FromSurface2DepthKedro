@@ -134,9 +134,11 @@ class InputDataset(Dataset):
 
     def __getitem__(self, index):
         if self.transform:
-            return self.transform(self.data[index])
+            X = self.transform(self.data[index])
+            return {'X': X}
         else:
-            return self.data[index]
+            X = self.data[index]
+            return {'X': X}
 
     def __len__(self):
         return len(self.data)
@@ -153,7 +155,8 @@ class TestDataset(Dataset):
         self.transform = lambda data: (torch.from_numpy(data).float()+127.)/255.
 
     def __getitem__(self, idx):
-        return self.transform(self.X[idx]), self.transform(self.Y[idx])
+        X, y = self.transform(self.X[idx]), self.transform(self.Y[idx])
+        return {'X': X, 'y': y}
 
     def __len__(self):
         return len(self.X)

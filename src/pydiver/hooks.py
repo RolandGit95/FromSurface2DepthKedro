@@ -27,20 +27,25 @@
 # limitations under the License.
 
 """Project hooks."""
+from memory_profiler import memory_usage
+import collections.abc
+from typing import Any, Dict, Iterable, Optional, Union
+from copy import deepcopy
+from kedro.versioning import Journal
+from kedro.io import DataCatalog
+from kedro.pipeline.node import Node
+from kedro.framework.hooks import hook_impl
+from kedro.config import ConfigLoader, TemplatedConfigLoader
+from pathlib import Path
+import os
 from typing import Any, Dict, Iterable, Optional
 import logging
 logger = logging.getLogger(__name__)
-import os
-from pathlib import Path
 
-from kedro.config import ConfigLoader, TemplatedConfigLoader
-from kedro.framework.hooks import hook_impl
-from kedro.pipeline.node import Node
-from kedro.io import DataCatalog
-from kedro.versioning import Journal
-from copy import deepcopy
-from typing import Any, Dict, Iterable, Optional, Union
-import collections.abc
+
+def _normalise_mem_usage(mem_usage):
+    # memory_profiler < 0.56.0 returns list instead of float
+    return mem_usage[0] if isinstance(mem_usage, (list, tuple)) else mem_usage
 
 
 class CreateDatasetFoldersHook:
@@ -70,11 +75,9 @@ def _make_dirs(path_to_make):
 
 class ProjectHooks:
     @hook_impl
-    def register_config_loader(
-        self, conf_paths: Iterable[str], env: str, extra_params: Dict[str, Any],
-    ) -> ConfigLoader:
+    def register_config_loader(self, conf_paths: Iterable[str], env: str, extra_params: Dict[str, Any],) -> ConfigLoader:
+        #import IPython ; IPython.embed() ; exit(1)
         return ConfigLoader(conf_paths)
-
 
     @hook_impl
     def register_catalog(
@@ -85,6 +88,10 @@ class ProjectHooks:
         save_version: str,
         journal: Journal,
     ) -> DataCatalog:
-        return DataCatalog.from_config(
+
+        dataCatalog = DataCatalog.from_config(
             catalog, credentials, load_versions, save_version, journal
         )
+
+        #import IPython ; IPython.embed() ; exit(1)
+        return dataCatalog
