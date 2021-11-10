@@ -11,31 +11,36 @@ cubes:
 ######## Train-, Test-Data ################
 
 _primary: &primary
-  type: pydiver.io.dataset_io.NumpyDataSet
+  type: PartitionedDataSet
+  dataset: pydiver.io.dataset_io.NumpyDataSet
   layer: primary
 
 X_train:
   <<: *primary
-  filepath: data/03_primary/regimeB/X_train.npy
+  path: data/02_primary/regimeB/X_train
+  filename_suffix: .npy
   
 Y_train:
   <<: *primary
-  filepath: data/03_primary/regimeB/Y_train.npy
+  path: data/02_primary/regimeB/Y_train
+  filename_suffix: .npy
   
 X_test:
   <<: *primary
-  filepath: data/03_primary/regimeB/X_test.npy
+  path: data/02_primary/regimeB/X_test
+  filename_suffix: .npy
   
 Y_test:
   <<: *primary
-  filepath: data/03_primary/regimeB/Y_test.npy
+  path: data/02_primary/regimeB/Y_test
+  filename_suffix: .npy
 
 
 ################ Trained models ################
 
 models:
   type: PartitionedDataSet
-  path: data/06_models/regimeB
+  path: data/03_models/regimeB/exp2_local
   load_args:
     model: STLSTM
     device: cuda
@@ -48,11 +53,11 @@ models:
 pred:
   type: PartitionedDataSet
   dataset: pydiver.io.dataset_io.NumpyDataSet  
-  path: data/07_model_output/regimeB
+  path: data/04_model_output/regimeB
   layer: model_output
   
 loss:
   type: PartitionedDataSet
   dataset: pydiver.io.dataset_io.NumpyDataSet  
-  path: data/08_validation/regimeB
+  path: data/05_validation/regimeB
   layer: validation

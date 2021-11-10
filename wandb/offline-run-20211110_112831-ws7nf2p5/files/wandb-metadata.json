@@ -1,0 +1,31 @@
+{
+    "os": "Linux-5.11.0-40-generic-x86_64-with-debian-bullseye-sid",
+    "python": "3.7.11",
+    "heartbeatAt": "2021-11-10T10:28:32.533282",
+    "startedAt": "2021-11-10T10:28:31.907078",
+    "docker": null,
+    "gpu": "NVIDIA GeForce GTX 1660 Ti with Max-Q Design",
+    "gpu_count": 1,
+    "cpu_count": 12,
+    "cuda": null,
+    "args": [
+        "run",
+        "--env",
+        "exp2",
+        "--pipeline",
+        "tr_without_pl+mv",
+        "--params",
+        "data_science.name:STLSTM_t1_d32,data_science.time_steps:[0],data_science.hidden_size:8"
+    ],
+    "state": "running",
+    "program": "/home/roland/anaconda3/envs/surface2depth/bin/kedro",
+    "git": {
+        "remote": "https://github.com/RolandGit95/FromSurface2DepthKedro.git",
+        "commit": "b6c6e4fd87cbe45999d0446015f68fcbab0e364f"
+    },
+    "email": "rolandstenger95@gmail.com",
+    "root": "/home/roland/Projekte/Tests/FromSurface2DepthKedro",
+    "host": "roland",
+    "username": "roland",
+    "executable": "/home/roland/anaconda3/envs/surface2depth/bin/python3.7"
+}

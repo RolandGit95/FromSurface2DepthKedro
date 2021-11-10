@@ -29,20 +29,13 @@
 
 import os
 
-def getTimeStepsFromInt(integer):
-    string = "[0"
-    for x in [f"_{i}" for i in range(1,integer)]:
-        string += x
-    string += "]"
-    return string
-
 def main():
     print(os.environ['SGE_TASK_ID'])
     SGE_TASK_ID = int(os.environ['SGE_TASK_ID'])
 
-    name = f'STLSTM_t{SGE_TASK_ID}_d32'
-    time_steps = getTimeStepsFromInt(SGE_TASK_ID)
-    os.system(f"kedro run --env exp2_mpi --pipeline tr_without_pl+mv --params data_science.name:{name},data_science.time_steps:{time_steps}")
+    name = f'STLSTM_t32_d_{SGE_TASK_ID}'
+    depths = f"[{SGE_TASK_ID}]"
+    os.system(f"kedro run --env exp3_mpi --pipeline tr_without_pl+mv --params data_science.name:{name},data_science.depths:{depths}")
 
 if __name__=='__main__':
     main()

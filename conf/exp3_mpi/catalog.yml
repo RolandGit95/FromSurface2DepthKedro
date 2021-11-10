@@ -12,33 +12,30 @@ cubes:
 _primary: &primary
   type: PartitionedDataSet
   dataset: pydiver.io.dataset_io.NumpyDataSet
+  filename_suffix: .npy
   layer: primary
 
 X_train:
   <<: *primary
   path: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/chaotic/processed/X_train
-  filename_suffix: .npy
   
 Y_train:
   <<: *primary
   path: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/chaotic/processed/Y_train
-  filename_suffix: .npy
   
 X_test:
   <<: *primary
   path: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/chaotic/processed/X_test
-  filename_suffix: .npy
   
 Y_test:
   <<: *primary
   path: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/chaotic/processed/Y_test
-  filename_suffix: .npy
 
 ################ Trained models ################
 
 models:
   type: PartitionedDataSet
-  path: data/03_models/regimeB
+  path: data/03_models/regimeB/exp3
   load_args:
     model: STLSTM
     device: cuda

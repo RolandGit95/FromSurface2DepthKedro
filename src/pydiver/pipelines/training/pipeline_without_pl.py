@@ -65,18 +65,17 @@ def train_without_pl(dataset_X, dataset_Y, params):
     #import IPython ; IPython.embed() ; exit(1)
     wandb.watch(model, log="all", log_freq=32)
 
+    train_sampler = get_sampler(len(dataset), val_split=params['training']['val_split'], train=True, shuffle=True, seed=params['seed'])
+    val_sampler = get_sampler(len(dataset), val_split=params['training']['val_split'], train=False, shuffle=True, seed=params['seed'])
 
-    output_length = 1
+    train_loader = torch.utils.data.DataLoader(dataset, batch_size=params['training']['batch_size'], num_workers=4, sampler=train_sampler)
+    val_loader = torch.utils.data.DataLoader(dataset, batch_size=params['training']['batch_size'],  num_workers=4, sampler=val_sampler)
+            
+    val_loader_iter = iter(val_loader)
+
+    output_length = len(params['depths'])
     for epoch in range(params['training']['max_epochs']): 
         print(f'Epoch number {epoch}')
-
-        train_sampler = get_sampler(len(dataset), val_split=params['training']['val_split'], train=True, shuffle=True, seed=params['seed'])
-        val_sampler = get_sampler(len(dataset), val_split=params['training']['val_split'], train=False, shuffle=True, seed=params['seed'])
-
-        train_loader = torch.utils.data.DataLoader(dataset, batch_size=params['training']['batch_size'], num_workers=4, sampler=train_sampler)
-        val_loader = torch.utils.data.DataLoader(dataset, batch_size=params['training']['batch_size'],  num_workers=4, sampler=val_sampler)
-            
-        val_loader_iter = iter(val_loader)
 
         for i, data in tqdm(enumerate(train_loader), total=len(train_loader)):
             model.zero_grad()
