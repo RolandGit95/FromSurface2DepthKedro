@@ -34,6 +34,7 @@ def getTimeStepsFromInt(integer):
     for x in [f"_{i}" for i in range(1,integer)]:
         string += x
     string += "]"
+    return string
 
 def main():
     print(os.environ['SGE_TASK_ID'])
