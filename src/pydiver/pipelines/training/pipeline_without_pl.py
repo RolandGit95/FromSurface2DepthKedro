@@ -94,7 +94,7 @@ def train_without_pl(dataset_X, dataset_Y, params):
             loss.backward()
             optimizer.step()      
 
-            if i%10==0:
+            if i%4==0:
                 try:
                     data = next(val_loader_iter)
                     X_val, y_val = data['X'], data['y']

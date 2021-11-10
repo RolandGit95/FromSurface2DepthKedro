@@ -22,7 +22,8 @@ def predict(model, data, depths=[0,1,2], batch_size=8, device="cuda"):
     
     y_preds = []
     for data in tqdm(dataloader, total=len(dataloader)):
-        X = data['X'].to(device)
+        #import IPython ; IPython.embed() ; exit(1)
+        X = data.to(device)
         y_pred = model(X, max_depth=num_layers).cpu().detach().numpy()
         
         y_preds.append(y_pred)  
