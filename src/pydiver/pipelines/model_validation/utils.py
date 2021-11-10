@@ -21,8 +21,8 @@ def predict(model, data, depths=[0,1,2], batch_size=8, device="cuda"):
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
     
     y_preds = []
-    for X in tqdm(dataloader, total=len(dataloader)):
-        X = X.to(device)
+    for data in tqdm(dataloader, total=len(dataloader)):
+        X = data['X'].to(device)
         y_pred = model(X, max_depth=num_layers).cpu().detach().numpy()
         
         y_preds.append(y_pred)  
@@ -51,6 +51,7 @@ def validate(y_true, y_pred, depths=[0,1,2], loss_function="mae", batch_size=8):
     LOSSES = []
     for _y_true, _y_pred in tqdm(zip(true_dataloader, pred_dataloader), total=len(true_dataloader)):
         losses = []
+
         for i, depth in enumerate(depths):
             loss = loss_fnc(_y_true[:,:,i].cpu().detach().numpy(), _y_pred[:,:,i].cpu().detach().numpy())
             losses.append(loss)

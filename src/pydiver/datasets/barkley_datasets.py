@@ -134,11 +134,11 @@ class InputDataset(Dataset):
 
     def __getitem__(self, index):
         if self.transform:
-            X = self.transform(self.data[index])
-            return {'X': X}
+            data = self.transform(self.data[index])
+            return data
         else:
-            X = self.data[index]
-            return {'X': X}
+            data = self.data[index]
+            return data
 
     def __len__(self):
         return len(self.data)
