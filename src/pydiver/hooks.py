@@ -27,7 +27,6 @@
 # limitations under the License.
 
 """Project hooks."""
-from memory_profiler import memory_usage
 import collections.abc
 from typing import Any, Dict, Iterable, Optional, Union
 from copy import deepcopy
