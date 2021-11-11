@@ -58,7 +58,7 @@ def train_without_pl(dataset_X, dataset_Y, params):
     model = nn.DataParallel(lstm.STLSTM(1, params['hidden_size'], 1)).to(device)
     loss_fnc = nn.MSELoss()
     val_loss_fnc = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=params['training']['lr'])
+    optimizer = torch.optim.Adam(model.parameters(), lr = params["lr"]) #lr=params['training']['lr'])
 
     def get_lr():
         for param_group in optimizer.param_groups:
