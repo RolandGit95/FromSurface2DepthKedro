@@ -48,11 +48,11 @@ models:
 pred:
   type: PartitionedDataSet
   dataset: pydiver.io.dataset_io.NumpyDataSet  
-  path: data/04_model_output/regimeB
+  path: data/04_model_output/regimeB/exp3
   layer: model_output
   
 loss:
   type: PartitionedDataSet
   dataset: pydiver.io.dataset_io.NumpyDataSet  
-  path: data/05_validation/regimeB
+  path: data/05_validation/regimeB/exp3
   layer: validation
