@@ -19,12 +19,14 @@ def predict(model, data, depths=[0,1,2], batch_size=8, device="cuda"):
     
     dataset = barkley_datasets.InputDataset(torch.from_numpy(data))
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
-    
+
+    transform = lambda data: (data.cpu().detach().numpy()*255-128).astype(np.int8)
+
     y_preds = []
     for data in tqdm(dataloader, total=len(dataloader)):
         #import IPython ; IPython.embed() ; exit(1)
         X = data.to(device)
-        y_pred = model(X, max_depth=num_layers).cpu().detach().numpy()
+        y_pred = transform(model(X, max_depth=num_layers))
         
         y_preds.append(y_pred)  
         
