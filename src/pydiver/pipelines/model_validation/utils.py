@@ -46,7 +46,7 @@ def validate(y_true, y_pred, depths=[0,1,2], loss_function="mae", batch_size=8):
     true_dataset = barkley_datasets.InputDataset(torch.from_numpy(y_true))
     true_dataloader = DataLoader(true_dataset, batch_size=batch_size, shuffle=False, drop_last=True)
 
-    pred_dataset = barkley_datasets.InputDataset(torch.from_numpy(y_pred), transform=None)
+    pred_dataset = barkley_datasets.InputDataset(torch.from_numpy(y_pred))
     pred_dataloader = DataLoader(pred_dataset, batch_size=batch_size, shuffle=False, drop_last=True)
 
     loss_fnc = loss_functions[loss_function]
@@ -55,6 +55,7 @@ def validate(y_true, y_pred, depths=[0,1,2], loss_function="mae", batch_size=8):
     for _y_true, _y_pred in tqdm(zip(true_dataloader, pred_dataloader), total=len(true_dataloader)):
         losses = []
 
+        #import IPython ; IPython.embed() ; exit(1)
         for i, depth in enumerate(depths):
             loss = loss_fnc(_y_true[:,:,i].cpu().detach().numpy(), _y_pred[:,:,i].cpu().detach().numpy())
             losses.append(loss)

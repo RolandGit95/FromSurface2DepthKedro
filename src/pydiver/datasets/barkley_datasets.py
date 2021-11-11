@@ -64,8 +64,8 @@ class BarkleyDataset(Dataset):
 
         # print(X)
 
-        self.X = torch.tensor(X[:self.max_length])[:, self.time_steps]
-        self.y = torch.tensor(Y[:self.max_length])[:, :, self.depths]
+        self.X = torch.from_numpy(X[:self.max_length])[:, self.time_steps]
+        self.y = torch.from_numpy(Y[:self.max_length])[:, :, self.depths]
 
     # def setData(self, X, Y):
     #    self.X = torch.tensor(X[:self.max_length])[:,self.time_steps]

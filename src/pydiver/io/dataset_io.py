@@ -9,7 +9,7 @@ import torch.nn as nn
 from pydiver.models.lstm import STLSTM
 
 model_keys = dict(
-    STLSTM=nn.DataParallel(STLSTM(1,8))
+    STLSTM=nn.DataParallel(STLSTM(1,64))
     )
 
 class NumpyDataSet(AbstractDataSet):

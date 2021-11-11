@@ -41,10 +41,10 @@ data_science:
     max_epochs: 2
     lr: 1.0e-4
     val_split: 0.1
-    batch_size: 8
+    batch_size: 2
 
   prediction:
-    batch_size: 16 # batch_size of predictions till the whole dataset is predicted
+    batch_size: 4 # batch_size of predictions till the whole dataset is predicted
 
   validation:
     loss: mae # mae, mse
