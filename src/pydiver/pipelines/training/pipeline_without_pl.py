@@ -18,6 +18,7 @@ os.environ["WANDB_MODE"] = "dryrun"
 
 
 def train_without_pl(dataset_X, dataset_Y, params):
+
     wandb.init(project='FromSurface2DepthKedro',
                name=params['name'],
                config=params,
@@ -59,6 +60,10 @@ def train_without_pl(dataset_X, dataset_Y, params):
     val_loss_fnc = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=params['training']['lr'])
 
+    def get_lr():
+        for param_group in optimizer.param_groups:
+            return param_group['lr']
+
     callbacks = [ReduceLROnPlateau(optimizer, patience=512//10, factor=0.3, min_lr=1e-7, verbose=True)]
 
     #import IPython ; IPython.embed() ; exit(1)
@@ -92,6 +97,8 @@ def train_without_pl(dataset_X, dataset_Y, params):
 
             loss.backward()
             optimizer.step()
+
+            wandb.log({"lr": get_lr()})
 
             if i % 4 == 0:
                 try:
