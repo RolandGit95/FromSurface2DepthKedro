@@ -1,4 +1,4 @@
-import os 
+import os
 from kedro.pipeline import Pipeline, node
 import re
 from tqdm import tqdm
@@ -12,38 +12,37 @@ from pydiver.models import lstm
 from pydiver.datasets import barkley_datasets
 from .utils import get_sampler
 
-#wandb.login()
+# wandb.login()
 
 os.environ["WANDB_MODE"] = "dryrun"
 
 
 def train_without_pl(dataset_X, dataset_Y, params):
-    global cfg
-
-    wandb.init(project='FromSurface2DepthKedro', 
-                name=params['name'], 
-                config=params, 
-                reinit=True)
+    wandb.init(project='FromSurface2DepthKedro',
+               name=params['name'],
+               config=params,
+               reinit=True,
+               dir="logs/")
 
     if isinstance(params['depths'], str):
         depths = params['depths']
-        params['depths'] = [int(i) for i in re.findall(r'\d+',depths)]
+        params['depths'] = [int(i) for i in re.findall(r'\d+', depths)]
 
     if isinstance(params['time_steps'], str):
         time_steps = params['time_steps']
-        params['time_steps'] = [int(i) for i in re.findall(r'\d+',time_steps)]
-        
+        params['time_steps'] = [int(i) for i in re.findall(r'\d+', time_steps)]
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     files_X, files_Y = list(dataset_X.keys()), list(dataset_Y.keys())
 
     for name in files_X:
-        m = re.search(r'train_\d+$', name)#.group()
+        m = re.search(r'train_\d+$', name)  # .group()
         if isinstance(m, (type(None))):
             files_X.remove(name)
 
     for name in files_Y:
-        m = re.search(r'train_\d+$', name)#.group()
+        m = re.search(r'train_\d+$', name)  # .group()
         if isinstance(m, (type(None))):
             files_Y.remove(name)
     files_X.sort(), files_Y.sort()
@@ -70,11 +69,11 @@ def train_without_pl(dataset_X, dataset_Y, params):
 
     train_loader = torch.utils.data.DataLoader(dataset, batch_size=params['training']['batch_size'], num_workers=4, sampler=train_sampler)
     val_loader = torch.utils.data.DataLoader(dataset, batch_size=params['training']['batch_size'],  num_workers=4, sampler=val_sampler)
-            
+
     val_loader_iter = iter(val_loader)
 
     output_length = len(params['depths'])
-    for epoch in range(params['training']['max_epochs']): 
+    for epoch in range(params['training']['max_epochs']):
         print(f'Epoch number {epoch}')
 
         for i, data in tqdm(enumerate(train_loader), total=len(train_loader)):
@@ -87,14 +86,14 @@ def train_without_pl(dataset_X, dataset_Y, params):
             outputs = model(X, max_depth=output_length)
 
             loss = 0.0
-            loss += loss_fnc(y, outputs) # [depths,batch,features=1,:,:]
+            loss += loss_fnc(y, outputs)  # [depths,batch,features=1,:,:]
 
             outputs = outputs.detach()
 
             loss.backward()
-            optimizer.step()      
+            optimizer.step()
 
-            if i%4==0:
+            if i % 4 == 0:
                 try:
                     data = next(val_loader_iter)
                     X_val, y_val = data['X'], data['y']
@@ -108,13 +107,13 @@ def train_without_pl(dataset_X, dataset_Y, params):
                 with torch.no_grad():
                     val_outputs = model(X_val, max_depth=output_length)
                     val_loss = val_loss_fnc(y_val, val_outputs)
-                
+
                 for callback in callbacks:
                     callback.step(val_loss)
 
-                wandb.log({"loss": loss, "val_loss":val_loss})
+                wandb.log({"loss": loss, "val_loss": val_loss})
 
-    return {params['name']:model.state_dict()}  
+    return {params['name']: model.state_dict()}
 
 
 def create_pipeline_without_pl(**kwargs):
@@ -126,7 +125,7 @@ def create_pipeline_without_pl(**kwargs):
                 inputs=["X_train", "Y_train", "params:data_science"],
                 outputs="models",
                 name="training_node",
-            ),  
+            ),
         ]
     )
 
