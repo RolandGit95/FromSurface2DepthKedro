@@ -19,6 +19,8 @@ os.environ["WANDB_MODE"] = "dryrun"
 
 def train_without_pl(dataset_X, dataset_Y, params):
 
+    print(params)
+    
     wandb.init(project='FromSurface2DepthKedro',
                name=params['name'],
                config=params,
