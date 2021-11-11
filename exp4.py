@@ -35,7 +35,7 @@ def main():
 
     name = f'STLSTM_t32_d_{SGE_TASK_ID}'
     depths = f"[{SGE_TASK_ID}]"
-    os.system(f"kedro run --env exp3_mpi --pipeline tr_without_pl+mv --params data_science.name:{name},data_science.depths:{depths}")
+    os.system(f"kedro run --env exp4_mpi --pipeline tr_without_pl+mv --params data_science.name:{name},data_science.depths:{depths}")
 
 if __name__=='__main__':
     main()
