@@ -32,9 +32,9 @@ import numpy as np
 
 def main():
 
-    learning_rates = np.arange(0.0001,0.001,0.0001) # len: 9 --> -t 0:8
+    learning_rates = np.arange(0.0001,0.001,0.0001) # len: 9 --> -t 1:9
     print(os.environ['SGE_TASK_ID'])
-    SGE_TASK_ID = int(os.environ['SGE_TASK_ID'])
+    SGE_TASK_ID = int(os.environ['SGE_TASK_ID']) - 1
 
     name = f'STLSTM_t32_d_{SGE_TASK_ID}'
     depths = f"[16]"
