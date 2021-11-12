@@ -35,12 +35,12 @@ data_science:
   name: "STLSTM_t32_d_0"
   wandb: True
 
-  lr: 3.0e-4
+  lr: 0.0004
   training:
     num_datasets: 1
     config_file: conf/base/training.yml
     max_epochs: 8
-    lr: 3.0e-4
+    lr: 0.0004
     val_split: 0.1
     batch_size: 8
 
