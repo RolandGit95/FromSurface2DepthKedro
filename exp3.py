@@ -31,7 +31,7 @@ import os
 
 def main():
     print(os.environ['SGE_TASK_ID'])
-    SGE_TASK_ID = int(os.environ['SGE_TASK_ID'])
+    SGE_TASK_ID = int(os.environ['SGE_TASK_ID']) - 1
 
     name = f'STLSTM_t32_d_{SGE_TASK_ID}'
     depths = f"[{SGE_TASK_ID}]"
