@@ -7,35 +7,35 @@ cubes:
   dataset: pydiver.io.dataset_io.NumpyDataSet
   layer: raw
 
+
 ######## Train-, Test-Data ################
 
 _primary: &primary
-  type: PartitionedDataSet
-  dataset: pydiver.io.dataset_io.NumpyDataSet
-  filename_suffix: .npy
+  type: pydiver.io.dataset_io.NumpyDataSet
   layer: primary
 
 X_train:
   <<: *primary
-  path: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/chaotic/processed/X_train
+  filepath: data/03_primary/regimeB/X_train.npy
   
 Y_train:
   <<: *primary
-  path: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/chaotic/processed/Y_train
+  filepath: data/03_primary/regimeB/Y_train.npy
   
 X_test:
   <<: *primary
-  path: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/chaotic/processed/X_test
+  filepath: data/03_primary/regimeB/X_test.npy
   
 Y_test:
   <<: *primary
-  path: /data.bmp/heart/SimulationData/2020_3DExMedSurfaceToDepth/2021-04-18_STLSTM_paper/datasets/chaotic/processed/Y_test
+  filepath: data/03_primary/regimeB/Y_test.npy
+
 
 ################ Trained models ################
 
 models:
   type: PartitionedDataSet
-  path: data/03_models/regimeB/exp4
+  path: data/06_models/regimeB
   load_args:
     model: STLSTM
     device: cuda
@@ -48,11 +48,11 @@ models:
 pred:
   type: PartitionedDataSet
   dataset: pydiver.io.dataset_io.NumpyDataSet  
-  path: data/04_model_output/regimeB/exp4
+  path: data/07_model_output/regimeB
   layer: model_output
   
 loss:
   type: PartitionedDataSet
   dataset: pydiver.io.dataset_io.NumpyDataSet  
-  path: data/05_validation/regimeB/exp4
+  path: data/08_validation/regimeB
   layer: validation

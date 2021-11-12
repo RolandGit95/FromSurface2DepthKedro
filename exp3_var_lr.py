@@ -36,7 +36,7 @@ def main():
     print(os.environ['SGE_TASK_ID'])
     SGE_TASK_ID = int(os.environ['SGE_TASK_ID']) - 1
 
-    name = f'STLSTM_t32_d_{SGE_TASK_ID}'
+    name = f'STLSTM_t32_d_16'
     depths = f"[16]"
     lr = learning_rates[SGE_TASK_ID]
     os.system(f"kedro run --env exp3_mpi --pipeline tr_without_pl+mv --params data_science.name:{name},data_science.depths:{depths},data_science.lr:{lr}")

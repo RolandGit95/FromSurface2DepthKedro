@@ -10,34 +10,34 @@ loss_functions = dict(
     mse=mean_squared_error,
 )
 
-    
+
 @torch.no_grad()
-def predict(model, data, depths=[0,1,2], batch_size=8, device="cuda"):
-    num_layers = len(depths)  
-    
+def predict(model, data, depths=[0, 1, 2], batch_size=8, device="cuda"):
+    num_layers = len(depths)
+
     model = model.to(device)
-    
+
     dataset = barkley_datasets.InputDataset(torch.from_numpy(data))
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
-    transform = lambda data: (data.cpu().detach().numpy()*255-128).astype(np.int8)
+    def transform(data): return (data.cpu().detach().numpy()*255-128).astype(np.int8)
 
     y_preds = []
     for data in tqdm(dataloader, total=len(dataloader)):
         #import IPython ; IPython.embed() ; exit(1)
         X = data.to(device)
         y_pred = transform(model(X, max_depth=num_layers))
-        
-        y_preds.append(y_pred)  
-        
+
+        y_preds.append(y_pred)
+
     y_preds = np.concatenate(y_preds, 0)
 
     #import IPython ; IPython.embed() ; exit(1)
-    
+
     return y_preds
 
 
-def validate(y_true, y_pred, depths=[0,1,2], loss_function="mae", batch_size=8):
+def validate(y_true, y_pred, depths=[0, 1, 2], loss_function="mae", batch_size=8):
     #import IPython ; IPython.embed() ; exit(1)
     assert loss_function in loss_functions, f"Loss function {loss_function} not implemented"
     assert y_pred.shape[2] == len(depths), "Number of layers to be validated don't match with the prediction-dimensions"
@@ -57,17 +57,15 @@ def validate(y_true, y_pred, depths=[0,1,2], loss_function="mae", batch_size=8):
 
         #import IPython ; IPython.embed() ; exit(1)
         for i, depth in enumerate(depths):
-            loss = loss_fnc(_y_true[:,:,i].cpu().detach().numpy(), _y_pred[:,:,i].cpu().detach().numpy())
+            loss = loss_fnc(_y_true[:, :, i].cpu().detach().numpy(), _y_pred[:, :, i].cpu().detach().numpy())
             losses.append(loss)
 
         LOSSES.append(np.array(losses))
     LOSSES = np.array(LOSSES)
 
     means = np.mean(LOSSES, axis=0)
-    
+
     return means
-    
-    
-    
-    
+
+
 #import IPython ; IPython.embed() ; exit(1)

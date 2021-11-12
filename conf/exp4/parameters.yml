@@ -29,10 +29,10 @@ data_science:
   device: cuda
   model: STLSTM
   hidden_size: 64
-  depths: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
-  time_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+  depths: [31]
+  time_steps: [0,6,12,18,24]
   seed: 42
-  name: "STLSTM_t32_d32"
+  name: "STLSTM_t0_6_12_18_24_d_31"
   wandb: True
 
   training:

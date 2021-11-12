@@ -5,22 +5,17 @@ from tqdm import tqdm
 import torch
 import torch.nn as nn
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-
 import wandb
-
 from pydiver.models import lstm
 from pydiver.datasets import barkley_datasets
 from .utils import get_sampler
 
-# wandb.login()
-
 os.environ["WANDB_MODE"] = "dryrun"
-
 
 def train_without_pl(dataset_X, dataset_Y, params):
 
     print(params)
-    
+
     wandb.init(project='FromSurface2DepthKedro',
                name=params['name'],
                config=params,
@@ -60,7 +55,7 @@ def train_without_pl(dataset_X, dataset_Y, params):
     model = nn.DataParallel(lstm.STLSTM(1, params['hidden_size'], 1)).to(device)
     loss_fnc = nn.MSELoss()
     val_loss_fnc = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr = params["lr"]) #lr=params['training']['lr'])
+    optimizer = torch.optim.Adam(model.parameters(), lr=params["lr"])  # lr=params['training']['lr'])
 
     def get_lr():
         for param_group in optimizer.param_groups:
@@ -68,7 +63,6 @@ def train_without_pl(dataset_X, dataset_Y, params):
 
     callbacks = [ReduceLROnPlateau(optimizer, patience=512//10, factor=0.3, min_lr=1e-7, verbose=True)]
 
-    #import IPython ; IPython.embed() ; exit(1)
     wandb.watch(model, log="all", log_freq=32)
 
     train_sampler = get_sampler(len(dataset), val_split=params['training']['val_split'], train=True, shuffle=True, seed=params['seed'])
@@ -124,7 +118,6 @@ def train_without_pl(dataset_X, dataset_Y, params):
 
     return {params['name']: model.state_dict()}
 
-
 def create_pipeline_without_pl(**kwargs):
 
     model_eval_pipe = Pipeline(
@@ -137,5 +130,4 @@ def create_pipeline_without_pl(**kwargs):
             ),
         ]
     )
-
     return model_eval_pipe
