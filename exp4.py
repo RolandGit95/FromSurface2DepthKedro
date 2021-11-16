@@ -28,14 +28,36 @@
 # %%
 
 import os
+import numpy as np
 
+# %%
+
+def getTimeStepsName(dt, depth):
+    time_steps = np.arange(0,32,dt)
+    name = "STLSTM_t_"
+    for time_step in time_steps:
+        name += str(time_step) + "_"
+    name += f"d_{depth}"
+
+    return time_steps, name
+
+#time_steps, name = getTimeStepsName(2, 31)
+#print(time_steps, name)
+
+# %%
 def main():
     print(os.environ['SGE_TASK_ID'])
     SGE_TASK_ID = int(os.environ['SGE_TASK_ID'])
 
-    name = f'STLSTM_t32_d_{SGE_TASK_ID}'
-    depths = f"[{SGE_TASK_ID}]"
-    os.system(f"kedro run --env exp4_mpi --pipeline tr_without_pl+mv --params data_science.name:{name},data_science.depths:{depths}")
+    dt = 2
+    depth = SGE_TASK_ID
+
+    time_steps, name = getTimeStepsName(dt, depth)
+
+    depths = f"[{depth}]"
+    os.system(f"kedro run --env exp4_mpi --pipeline tr_without_pl+mv --params data_science.name:{name},data_science.depths:{depths},data_science.time_steps:{time_steps}")
 
 if __name__=='__main__':
     main()
+
+
