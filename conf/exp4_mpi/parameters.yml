@@ -34,6 +34,7 @@ data_science:
   seed: 42
   name: "STLSTM_t0_6_12_18_24_d_31"
   wandb: True
+  lr: 0.0004
 
   training:
     num_datasets: 1
