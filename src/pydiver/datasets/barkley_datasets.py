@@ -128,10 +128,14 @@ class BarkleyDataset(Dataset):
 
 
 class InputDataset(Dataset):
-    def __init__(self, data, transform=lambda data: (data.float()+127.)/255.):
-        self.data = data
+    def __init__(self, data, time_steps=None, transform=lambda data: (data.float()+127.)/255.):
         self.transform = transform
+        self.time_steps = np.array(time_steps)
 
+        if isinstance(time_steps, type(None)):
+            self.data = data[:,:]
+        else:
+            self.data = data[:,time_steps]
     def __getitem__(self, index):
         if self.transform:
             data = self.transform(self.data[index])

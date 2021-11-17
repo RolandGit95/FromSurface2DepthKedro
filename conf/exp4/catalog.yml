@@ -40,7 +40,7 @@ Y_test:
 
 models:
   type: PartitionedDataSet
-  path: data/03_models/regimeB/exp3_local
+  path: data/03_models/regimeB/exp4_local
   load_args:
     model: STLSTM
     device: cuda

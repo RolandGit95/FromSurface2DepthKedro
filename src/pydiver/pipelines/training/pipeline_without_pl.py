@@ -12,6 +12,7 @@ from .utils import get_sampler
 
 os.environ["WANDB_MODE"] = "dryrun"
 
+
 def train_without_pl(dataset_X, dataset_Y, params):
 
     print(params)
@@ -117,6 +118,7 @@ def train_without_pl(dataset_X, dataset_Y, params):
                 wandb.log({"loss": loss, "val_loss": val_loss})
 
     return {params['name']: model.state_dict()}
+
 
 def create_pipeline_without_pl(**kwargs):
 

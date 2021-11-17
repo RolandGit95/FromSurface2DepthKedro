@@ -35,7 +35,7 @@ Y_test:
 
 models:
   type: PartitionedDataSet
-  path: data/03_models/regimeB/exp4
+  path: data/03_models/regimeB/exp4_local
   load_args:
     model: STLSTM
     device: cuda
@@ -48,11 +48,11 @@ models:
 pred:
   type: PartitionedDataSet
   dataset: pydiver.io.dataset_io.NumpyDataSet  
-  path: data/04_model_output/regimeB/exp4
+  path: data/04_model_output/regimeB/exp4_local
   layer: model_output
   
 loss:
   type: PartitionedDataSet
   dataset: pydiver.io.dataset_io.NumpyDataSet  
-  path: data/05_validation/regimeB/exp4
+  path: data/05_validation/regimeB/exp4_local
   layer: validation

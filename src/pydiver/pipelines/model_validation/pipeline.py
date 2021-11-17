@@ -39,7 +39,12 @@ def prediction_io(dataset_X_test, models_dataset, kwargs):
 
     y_preds_dict = {}
     for test_data_file in files_X:
-        y_preds = predict(model, dataset_X_test[test_data_file](), depths=kwargs["depths"], device=device, batch_size=kwargs['prediction']['batch_size'])
+        #import IPython ; IPython.embed() ; exit(1)
+        y_preds = predict(model, dataset_X_test[test_data_file](), 
+                            depths=kwargs["depths"], 
+                            time_steps=kwargs["time_steps"],
+                            device=device, 
+                            batch_size=kwargs['prediction']['batch_size'])
         #import IPython ; IPython.embed() ; exit(1)
         y_preds_dict[kwargs['name'] + "_" + test_data_file] = y_preds
     return y_preds_dict
