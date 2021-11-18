@@ -62,7 +62,7 @@ def train_without_pl(dataset_X, dataset_Y, params):
         for param_group in optimizer.param_groups:
             return param_group['lr']
 
-    callbacks = [ReduceLROnPlateau(optimizer, patience=512//5, factor=0.3, min_lr=1e-7, verbose=True)]
+    callbacks = [ReduceLROnPlateau(optimizer, patience=512, factor=0.3, min_lr=1e-7, verbose=True)]
 
     wandb.watch(model, log="all", log_freq=32)
 
