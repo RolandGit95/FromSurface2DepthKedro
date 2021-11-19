@@ -61,6 +61,7 @@ def main():
     depth = SGE_TASK_ID
 
     time_steps, name, str_time_step = getTimeStepsName(dt, depth)
+    print(time_steps, name, str_time_step)
 
     depths = f"[{depth}]"
     os.system(f"kedro run --env exp4_mpi --pipeline tr_without_pl+mv --params data_science.name:{name},data_science.depths:{depths},data_science.time_steps:{str_time_step}")
