@@ -54,9 +54,12 @@ def getTimeStepsName(dt, depth):
 
 
 def main():
-    print(os.environ['SGE_TASK_ID'])
-    SGE_TASK_ID = int(os.environ['SGE_TASK_ID']) - 1
-
+    try:
+        print(os.environ['SGE_TASK_ID'])
+        SGE_TASK_ID = int(os.environ['SGE_TASK_ID']) - 1
+    except KeyError:
+        SGE_TASK_ID = 1
+        
     dt = 2
     depth = SGE_TASK_ID
 
