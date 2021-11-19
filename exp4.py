@@ -1,27 +1,27 @@
 #! python
 # %%
 # name
-# $ -N kedro
+#$ -N kedro
 
 # execute from current directory
-# $ -cwd
+#$ -cwd
 
 # Preserve environment variables
-# $ -V
+#$ -V
 
 # Provide path to python executable
-# $ -S /home/stenger/smaxxhome/anaconda3/envs/pydiver/bin/python
+#$ -S /home/stenger/smaxxhome/anaconda3/envs/pydiver/bin/python
 
 # Merge error and out
-# $ -j yes
+#$ -j yes
 
 # serial queue
-# $ -q taranis-gpu1.q
+#$ -q taranis-gpu1.q
 # -q teutates.q
 # -q grannus.q
 
 # Path for output
-# $ -o /data.bmp/heart/DataAnalysis/2020_3DExMedSurfaceToDepth/FromSurface2DepthKedro/logs
+#$ -o /data.bmp/heart/DataAnalysis/2020_3DExMedSurfaceToDepth/FromSurface2DepthKedro/logs
 
 # job array of length 1
 # -t 1:2
@@ -59,7 +59,7 @@ def main():
         SGE_TASK_ID = int(os.environ['SGE_TASK_ID']) - 1
     except KeyError:
         SGE_TASK_ID = 1
-        
+
     dt = 2
     depth = SGE_TASK_ID
 
