@@ -60,7 +60,7 @@ def main():
     #except KeyError:
      #   SGE_TASK_ID = 1
 
-    dt = 2
+    dt = 3
     depth = SGE_TASK_ID
 
     time_steps, name, str_time_step = getTimeStepsName(dt, depth)
