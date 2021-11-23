@@ -16,10 +16,9 @@ The `base` folder is for shared configuration, such as non-sensitive and project
 
 WARNING: Please do not put access credentials in the base configuration folder.
 
-## Instructions
+## Specific experiment configuration
 
-
-
+Specific configurations are saved in seperate folders (for example in exp1/, exp2/ etc.). By using the --env flag (kedro run --env "folder-name"), the environment and its parameters/cataolg will override the existing in the base environment.
 
 
 ## Find out more
