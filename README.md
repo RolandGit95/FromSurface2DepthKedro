@@ -7,8 +7,26 @@ This is the complete source code for the master thesis by Roland Stenger, handed
 The pipelines are build with kedro, a framework to build robust and scalable data pipelines by providing uniform project templates, data abstraction, configuration and modular data science code. 
 
 ## conf
+ This folder contains all specifications for data files and specific simulation- and training-hyperparameters. To use the specifications, kedro uses the flag --env "folder_name"; for example: kedro run --env exp4
 
-## 
+## data
+
+In this folder, all the data which will be generated during the pipeline run, is stored. The folder location are defined by the  environment (conf-folder). 
+
+## docs
+
+
+## documents
+
+## logs
+
+## notebook 
+
+## scripts
+
+## src
+
+
 
 
 ## How to install dependencies
